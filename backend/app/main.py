@@ -9,6 +9,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api import shipments
+from app.services import reasoning_service
 from app.workers import ais_worker, tide_poll, trail_snapshot, weather_poll
 
 logger = logging.getLogger(__name__)
@@ -22,6 +23,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         asyncio.create_task(trail_snapshot.run(), name="trail_snapshot"),
         asyncio.create_task(weather_poll.run(), name="weather_poll"),
         asyncio.create_task(tide_poll.run(), name="tide_poll"),
+        asyncio.create_task(reasoning_service.run_scheduler(), name="agent_a_scheduler"),
     ]
     logger.info("started %d background worker(s)", len(tasks))
     try:

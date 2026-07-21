@@ -173,3 +173,93 @@ async def test_request_research_stub_returns_empty_finding(db) -> None:
     assert finding.relevance == "thap"
     assert len(finding.sources) >= 1
     assert "TASK-09" in finding.event or "stub" in finding.event.lower()
+
+
+# --- reasoning_service: note write + endpoint key-gate ---
+
+
+class _FakeRunner:
+    def __init__(self, text: str = "Nhận định: ETA ổn định.") -> None:
+        self.text = text
+
+    async def run(self, message: str) -> str:
+        return self.text
+
+
+@pytest.fixture
+def reasoning(db, monkeypatch: pytest.MonkeyPatch):
+    from app.services import reasoning_service
+
+    monkeypatch.setattr(reasoning_service, "async_session_factory", db)
+    monkeypatch.setattr(reasoning_service.agent_a, "build_agent_a", lambda: _FakeRunner())
+    return reasoning_service
+
+
+async def test_run_agent_a_inserts_note_row_when_no_history(db, reasoning) -> None:
+    shipment_id = await _seed_one(db, _shipment())
+
+    note = await reasoning.run_agent_a(shipment_id)
+
+    assert note == "Nhận định: ETA ổn định."
+    async with db() as session:
+        from sqlalchemy import select
+
+        from app.db.models import EtaHistory, Shipment
+
+        row = (await session.execute(select(EtaHistory))).scalar_one()
+        assert row.shipment_id == shipment_id
+        assert row.source == "weather_adjusted"
+        assert row.note == note
+        # agent never overrides the baseline number (§6.3b)
+        shipment = await session.get(Shipment, shipment_id)
+        assert shipment.eta_current == datetime(2026, 7, 21, 12)
+
+
+async def test_run_agent_a_updates_last_note_when_eta_unchanged(db, reasoning) -> None:
+    from sqlalchemy import select
+
+    from app.db.models import EtaHistory
+
+    shipment_id = await _seed_one(db, _shipment())
+    async with db() as session:
+        session.add(
+            EtaHistory(
+                shipment_id=shipment_id,
+                eta_value=datetime(2026, 7, 21, 12, tzinfo=UTC),
+                source="weather_adjusted",
+                note="cũ",
+            )
+        )
+        await session.commit()
+
+    await reasoning.run_agent_a(shipment_id)
+
+    async with db() as session:
+        rows = (await session.execute(select(EtaHistory))).scalars().all()
+        assert len(rows) == 1  # updated in place, no new row (IC§5.2)
+        assert rows[0].note == "Nhận định: ETA ổn định."
+
+
+async def test_analyze_endpoint_without_key_returns_clear_error(db, monkeypatch) -> None:
+    from httpx import ASGITransport, AsyncClient
+
+    from app.api.deps import get_session
+    from app.main import app
+
+    monkeypatch.setattr(settings, "LLM_API_KEY", "")
+    shipment_id = await _seed_one(db, _shipment())
+
+    async def override_session():
+        async with db() as session:
+            yield session
+
+    app.dependency_overrides[get_session] = override_session
+    try:
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            r = await client.post(f"/api/v1/shipments/{shipment_id}/analyze")
+    finally:
+        app.dependency_overrides.clear()
+
+    assert r.status_code == 503
+    assert r.json()["detail"]["code"] == "LLM_NOT_CONFIGURED"

@@ -2,7 +2,7 @@
 
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, BackgroundTasks, Depends, Query
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -12,6 +12,9 @@ from app.api.errors import raise_api_error
 from app.core.monitoring_mode import UnsupportedCombination, derive_monitoring_mode
 from app.core.normalize import normalize_container_no, normalize_vessel_name
 from app.db.models import EtaHistory, Shipment, ShipmentLeg, VesselTrail
+from app.integrations.errors import ExternalIntegrationError
+from app.integrations.llm_client import build_llm_client
+from app.services import reasoning_service
 from app.schemas.shipment import (
     EtaHistoryOut,
     ResolveManualIn,
@@ -153,6 +156,22 @@ async def list_shipments(
         stmt = stmt.where(Shipment.shipment_direction == direction)
     result = await session.execute(stmt)
     return [ShipmentListItem.model_validate(s) for s in result.scalars().all()]
+
+
+@router.post("/{shipment_id}/analyze", status_code=202)
+async def analyze_shipment(
+    shipment_id: int,
+    background_tasks: BackgroundTasks,
+    session: AsyncSession = Depends(get_session),
+) -> dict[str, str]:
+    """Queue one manual Agent A run (IC§3.2/§5.3 — "Phân tích ngay")."""
+    await _get_shipment_or_404(session, shipment_id)
+    try:
+        build_llm_client()  # fail clearly before accepting a job that cannot run
+    except ExternalIntegrationError as exc:
+        raise_api_error(503, "LLM_NOT_CONFIGURED", str(exc))
+    background_tasks.add_task(reasoning_service.run_agent_a_background, shipment_id)
+    return {"status": "queued"}
 
 
 @router.get("/{shipment_id}", response_model=ShipmentDetail)
