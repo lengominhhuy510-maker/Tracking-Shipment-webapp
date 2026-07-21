@@ -9,7 +9,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api import shipments
-from app.workers import ais_worker, trail_snapshot
+from app.workers import ais_worker, tide_poll, trail_snapshot, weather_poll
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +20,8 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     tasks = [
         asyncio.create_task(ais_worker.run(), name="ais_worker"),
         asyncio.create_task(trail_snapshot.run(), name="trail_snapshot"),
+        asyncio.create_task(weather_poll.run(), name="weather_poll"),
+        asyncio.create_task(tide_poll.run(), name="tide_poll"),
     ]
     logger.info("started %d background worker(s)", len(tasks))
     try:
