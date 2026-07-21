@@ -9,8 +9,5 @@
   "scripts": {
     "build": "tsc",
     "start": "echo \"implemented in TASK-10\""
-  },
-  "dependencies": {
-    "@playwright/mcp": "0.0.78"
   }
 }
