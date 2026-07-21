@@ -28,7 +28,6 @@ from app.db.base import async_session_factory
 from app.db.models import AgentProposal, ProcessedEmail, Shipment
 from app.integrations.errors import ExternalIntegrationError
 from app.integrations.imap_client import IMAPClient, RawEmail
-from app.services import forward_service
 from app.services.broadcast import broadcast_proposal_created
 
 logger = logging.getLogger(__name__)
@@ -122,7 +121,6 @@ async def process_raw_email(
     proposed_action = "rollover" if extraction.new_vessel_name else "eta_update"
     proposal_ids: list[int] = []
     broadcast_payloads: list[tuple[int, dict]] = []
-    forward_shipments: list[Shipment] = []
 
     async with session_factory() as session:
         async with session.begin():
@@ -160,8 +158,6 @@ async def process_raw_email(
                 session.add(proposal)
                 await session.flush()
                 proposal_ids.append(proposal.id)
-                if shipment.monitoring_mode == "auto_email":
-                    forward_shipments.append(shipment)
                 broadcast_payloads.append(
                     (
                         shipment.id,
@@ -187,11 +183,6 @@ async def process_raw_email(
 
     for shipment_id, payload in broadcast_payloads:
         await broadcast(shipment_id, payload)
-
-    # TASK-16 §7.4: sau khi proposal đã commit — lô auto_email → auto-forward
-    # (recipient chỉ từ env whitelist; fail chỉ log, không ảnh hưởng proposal).
-    for shipment in forward_shipments:
-        await forward_service.auto_forward(raw, shipment)
 
     return EmailProcessResult(
         outcome=outcome, needs_seen=True, proposal_ids=tuple(proposal_ids)

@@ -15,7 +15,6 @@ python-jose[cryptography]==3.5.0
 authlib==1.7.2
 ag2[openai]==0.14.0
 mcp==1.12.4
-aiosmtplib==5.1.2
 
 # --- Test/dev ---
 pytest>=8
