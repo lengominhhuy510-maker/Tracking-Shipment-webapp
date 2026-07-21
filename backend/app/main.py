@@ -5,11 +5,15 @@ import contextlib
 import logging
 from collections.abc import AsyncIterator
 
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
 
-from app.api import research, shipments, ws
-from app.services import reasoning_service
+from app.api import proposals, shipments, ws
+from app.api.deps import get_current_user
+from app.auth import routes as auth_routes
+from app.config import settings
+from app.services import email_service, reasoning_service
 from app.workers import ais_worker, tide_poll, trail_snapshot, weather_poll
 
 logger = logging.getLogger(__name__)
@@ -24,6 +28,8 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         asyncio.create_task(weather_poll.run(), name="weather_poll"),
         asyncio.create_task(tide_poll.run(), name="tide_poll"),
         asyncio.create_task(reasoning_service.run_scheduler(), name="agent_a_scheduler"),
+        # exactly ONE email poller (§7.1 single-process model)
+        asyncio.create_task(email_service.run(), name="email_poller"),
     ]
     logger.info("started %d background worker(s)", len(tasks))
     try:
@@ -40,6 +46,13 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 app = FastAPI(title="Shipment Tracking Demo", lifespan=lifespan)
 
 app.add_middleware(
+    SessionMiddleware,
+    secret_key=settings.SESSION_JWT_SECRET,
+    https_only=settings.COOKIE_SECURE,
+    same_site="lax",
+)
+
+app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],  # Vite dev server
     allow_credentials=True,
@@ -47,12 +60,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(auth_routes.router)
 app.include_router(shipments.router)
-app.include_router(research.router)
+app.include_router(proposals.router)
 app.include_router(ws.router)
 
 
-@app.get("/api/v1/health")
+@app.get("/api/v1/health", dependencies=[Depends(get_current_user)])
 async def health() -> dict[str, str]:
     return {"status": "ok"}
 

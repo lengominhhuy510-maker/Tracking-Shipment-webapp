@@ -1,16 +1,13 @@
-"""FastAPI dependencies: DB session + current user.
-
-⚠️ [v0.9.12] Development-only auth bypass: get_current_user is a STUB returning
-the first seed user (so decided_by/verified_by have a test value). Real
-cookie-JWT auth replaces this in TASK-14 — NOT a bug (PROGRESS TASK-03).
-"""
+"""FastAPI dependencies: database session and authenticated current user."""
 
 from collections.abc import AsyncGenerator
 
-from fastapi import Depends
+from fastapi import Depends, Request
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.api.errors import raise_api_error
+from app.auth.jwt import verify_token
 from app.db.base import async_session_factory
 from app.db.models import User
 
@@ -20,6 +17,20 @@ async def get_session() -> AsyncGenerator[AsyncSession, None]:
         yield session
 
 
-async def get_current_user(session: AsyncSession = Depends(get_session)) -> User | None:
-    result = await session.execute(select(User).order_by(User.id).limit(1))
-    return result.scalar_one_or_none()
+async def get_current_user(request: Request, session: AsyncSession = Depends(get_session)) -> User:
+    token = request.cookies.get("session_token")
+    claims = verify_token(token) if token else None
+    if claims is None:
+        raise_api_error(401, "UNAUTHENTICATED", "Yêu cầu đăng nhập")
+
+    try:
+        user_id = int(claims["sub"])
+    except (KeyError, TypeError, ValueError):
+        raise_api_error(401, "UNAUTHENTICATED", "Yêu cầu đăng nhập")
+
+    result = await session.execute(select(User).where(User.id == user_id))
+    user = result.scalar_one_or_none()
+    if user is None:
+        raise_api_error(401, "UNAUTHENTICATED", "Yêu cầu đăng nhập")
+    request.state.user = user
+    return user

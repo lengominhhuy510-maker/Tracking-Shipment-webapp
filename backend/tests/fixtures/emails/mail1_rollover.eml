@@ -1,0 +1,18 @@
+Message-ID: <rollover-001@notification.maersk.com>
+From: Maersk Notification <noreply@notification.maersk.com>
+To: delegate@tracking.example.com
+Subject: Rollover Notification - B/L BL-DEMO-001 - MSKU1234565
+Date: Mon, 20 Jul 2026 08:00:00 +0000
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+
+Dear Customer,
+Please be advised that due to vessel space constraints, the below shipment
+has been rolled over to the next available vessel:
+  B/L Number: BL-DEMO-001
+  Container: MSKU1234565
+  Original Vessel/Voyage: EVER GIVEN / V.001N
+  New Vessel/Voyage: EVER ACE / V.002N
+  Revised ETA Cat Lai: 2026-08-10T14:00:00+00:00
+We apologize for the inconvenience.
+Maersk Customer Service

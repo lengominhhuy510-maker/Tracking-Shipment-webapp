@@ -102,7 +102,9 @@ async def get_tide_window(shipment_id: int) -> TideWindowResult:
     fetched_at = _as_utc(env.tide_fetched_at) if env is not None else None
     return TideWindowResult(
         extremes=extremes,
-        eta_falls_in_window=eta_in_tidal_window(eta_current, extremes, settings.TIDAL_WINDOW_HOURS),
+        eta_falls_in_window=eta_in_tidal_window(
+            eta_current, extremes, settings.TIDAL_WINDOW_HOURS
+        ),
         station_name=env.tide_station_name if env is not None else None,
         data_age_hours=(
             (datetime.now(UTC) - fetched_at).total_seconds() / 3600
@@ -113,10 +115,19 @@ async def get_tide_window(shipment_id: int) -> TideWindowResult:
 
 
 async def request_research(shipment_id: int, focus: str | None = None) -> ResearchFindingOut:
-    """Kích vòng A↔B (TASK-09). focus = hướng search cụ thể khi A yêu cầu search
-    lại (VD 'chỉ eo Malacca 48h tới'). Check cache route_key TTL TRƯỚC khi gọi
-    Agent B thật (§6.3d) — cache hit trả thẳng, không tốn search quota."""
-    # Lazy import: research_service imports ``_route_key`` from this module.
-    from app.services import research_service
+    """Kích vòng A↔B. focus = hướng search cụ thể khi A yêu cầu search lại.
 
-    return await research_service.request_research(shipment_id, focus)
+    STUB (TASK-08): Agent B thật ở TASK-09 — hiện trả finding rỗng
+    confidence='thap' để Agent A biết là chưa có research thật."""
+    logger.info(
+        "request_research stub called (shipment=%d, focus=%r) — Agent B arrives in TASK-09",
+        shipment_id,
+        focus,
+    )
+    return ResearchFindingOut(
+        event="stub: chưa có research thật (Agent B — TASK-09)",
+        relevance="thap",
+        route_impact="chưa xác định — cần xác minh",
+        confidence="thap",
+        sources=["https://example.invalid/task-09-pending"],
+    )
