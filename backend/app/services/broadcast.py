@@ -1,38 +1,46 @@
-"""Central broadcast hook module (TASK-04 step 0 — noop bodies).
+"""Broadcast shipment events to connected WebSocket clients (IC§6)."""
 
-TASK-06 replaces each body with ConnectionManager.broadcast using the IC§6
-envelope ``{type, shipment_id, ts, data}``. Names + signatures are FROZEN
-(IC§6 mapping table) — TASK-05/07/11/13 import these exact names.
-"""
+from datetime import UTC, datetime
+
+from app.api.ws import manager
+
+
+def _envelope(event_type: str, shipment_id: int, data: dict) -> dict:
+    return {
+        "type": event_type,
+        "shipment_id": shipment_id,
+        "ts": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+        "data": data,
+    }
 
 
 async def broadcast_position(shipment_id: int, data: dict) -> None:
-    """type="position_update" — TASK-06 thay body bằng ConnectionManager.broadcast."""
+    await manager.broadcast(_envelope("position_update", shipment_id, data))
 
 
 async def broadcast_eta_update(shipment_id: int, data: dict) -> None:
-    """type="eta_update" — TASK-06 thay body bằng ConnectionManager.broadcast."""
+    await manager.broadcast(_envelope("eta_update", shipment_id, data))
 
 
 async def broadcast_deviation_alert(shipment_id: int, data: dict) -> None:
-    """type="deviation_alert" — TASK-06 thay body bằng ConnectionManager.broadcast."""
+    await manager.broadcast(_envelope("deviation_alert", shipment_id, data))
 
 
 async def broadcast_tidal_alert(shipment_id: int, data: dict) -> None:
-    """type="tidal_alert" — TASK-06 thay body bằng ConnectionManager.broadcast."""
+    await manager.broadcast(_envelope("tidal_alert", shipment_id, data))
 
 
 async def broadcast_proposal_created(shipment_id: int, data: dict) -> None:
-    """type="proposal_created" — TASK-06 thay body bằng ConnectionManager.broadcast."""
+    await manager.broadcast(_envelope("proposal_created", shipment_id, data))
 
 
 async def broadcast_onboarding_update(shipment_id: int, data: dict) -> None:
-    """type="onboarding_update" — TASK-06 thay body bằng ConnectionManager.broadcast."""
+    await manager.broadcast(_envelope("onboarding_update", shipment_id, data))
 
 
 async def broadcast_status_change(shipment_id: int, data: dict) -> None:
-    """type="status_change" — TASK-06 thay body bằng ConnectionManager.broadcast."""
+    await manager.broadcast(_envelope("status_change", shipment_id, data))
 
 
 async def broadcast_status_change_suggested(shipment_id: int, data: dict) -> None:
-    """type="status_change_suggested" — TASK-06 thay body bằng ConnectionManager.broadcast."""
+    await manager.broadcast(_envelope("status_change_suggested", shipment_id, data))

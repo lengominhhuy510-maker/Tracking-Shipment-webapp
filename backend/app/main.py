@@ -8,8 +8,8 @@ from collections.abc import AsyncIterator
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import shipments
-from app.workers import ais_worker, tide_poll, trail_snapshot, weather_poll
+from app.api import shipments, ws
+from app.workers import ais_worker, trail_snapshot
 
 logger = logging.getLogger(__name__)
 
@@ -20,8 +20,6 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     tasks = [
         asyncio.create_task(ais_worker.run(), name="ais_worker"),
         asyncio.create_task(trail_snapshot.run(), name="trail_snapshot"),
-        asyncio.create_task(weather_poll.run(), name="weather_poll"),
-        asyncio.create_task(tide_poll.run(), name="tide_poll"),
     ]
     logger.info("started %d background worker(s)", len(tasks))
     try:
@@ -46,6 +44,7 @@ app.add_middleware(
 )
 
 app.include_router(shipments.router)
+app.include_router(ws.router)
 
 
 @app.get("/api/v1/health")
