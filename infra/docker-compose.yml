@@ -1,7 +1,11 @@
-# TASK-00: khung 5 service theo IC§12. Hoàn chỉnh ở TASK-15.
+# TASK-15: 5 service hoàn chỉnh (IC§12) — base file production-safe:
+#   webapp KHÔNG map port ra host (chỉ caddy 80/443). Dev muốn truy cập trực tiếp
+#   localhost:1476 (OAuth redirect URI) → thêm override:
+#   docker compose -f infra/docker-compose.yml -f infra/docker-compose.dev.yml up
 services:
   caddy:
     image: caddy:2
+    restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
@@ -10,9 +14,11 @@ services:
       - caddy_data:/data
       - caddy_config:/config
     environment:
-      - DOMAIN=${DOMAIN:-}
+      # ':-' coi DOMAIN rỗng như chưa đặt → fallback localhost (Caddy address rỗng sẽ vỡ parse)
+      - DOMAIN=${DOMAIN:-localhost}
     depends_on:
-      - webapp
+      webapp:
+        condition: service_healthy
     networks:
       - internal
 
@@ -20,40 +26,72 @@ services:
     build:
       context: ..
       dockerfile: backend/Dockerfile
+    restart: unless-stopped
     env_file:
       # required:false để `docker compose config` chạy được từ clone sạch chưa có .env
       - path: ../.env
         required: false
-    ports:
-      # dev: map 1476 (khớp OAuth redirect). Production: bỏ map, caddy proxy tới webapp:1476
-      - "1476:1476"
+    # /api/v1/health yêu cầu auth (test_auth_coverage) → 401 không cookie vẫn nghĩa là
+    # server sống; healthcheck chấp nhận 200 hoặc 401. python:3.12-slim không có curl.
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import http.client,sys; c=http.client.HTTPConnection('localhost',1476,timeout=5); c.request('GET','/api/v1/health'); sys.exit(0 if c.getresponse().status in (200,401) else 1)"
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      playwright-mcp:
+        condition: service_started
     networks:
       - internal
 
   playwright-mcp:
     build:
       context: ../playwright-mcp
+    restart: unless-stopped
     # IC§0.1: Node KHÔNG nhận DATABASE_URL — chỉ REDIS_URL + SCRAPE_*
     environment:
       - REDIS_URL=redis://redis:6379/0
       - SCRAPE_REST_PORT=3000
       - MCP_SSE_PORT=3001
-      - SCRAPE_CONCURRENCY=2
-      - SCRAPE_JOB_TIMEOUT_SECONDS=90
+      - SCRAPE_CONCURRENCY=${SCRAPE_CONCURRENCY:-2}
+      - SCRAPE_JOB_TIMEOUT_SECONDS=${SCRAPE_JOB_TIMEOUT_SECONDS:-90}
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "require('net').connect(3000,'localhost').on('connect',()=>process.exit(0)).on('error',()=>process.exit(1))"
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
     depends_on:
-      - redis
+      redis:
+        condition: service_healthy
     networks:
       - internal
 
   db:
     image: postgres:16-alpine
+    restart: unless-stopped
     environment:
       - POSTGRES_USER=app
       - POSTGRES_PASSWORD=app
       - POSTGRES_DB=shipment_demo
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d shipment_demo"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - db_data:/var/lib/postgresql/data
     networks:
@@ -61,6 +99,12 @@ services:
 
   redis:
     image: redis:7-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - internal
 

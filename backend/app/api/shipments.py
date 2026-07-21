@@ -28,7 +28,7 @@ from app.schemas.shipment import (
     ShipmentPatch,
     TrailPoint,
 )
-from app.services import carrier_eta_service, scrape_client
+from app.services import scrape_client
 from app.services.leg_service import mark_leg_manual, resolve_leg
 
 router = APIRouter(
@@ -107,18 +107,6 @@ def _spawn_onboarding_task(coro, name: str) -> None:
     task.add_done_callback(_onboarding_tasks.discard)
 
 
-def _spawn_carrier_eta_fetch(shipment_id: int) -> None:
-    """§6.7b: sau IMO resolve, lấy carrier ETA nền — tiện ích thêm, fail không sao.
-
-    ``fetch_carrier_eta`` tự kiểm tra ``eta_original`` còn trống và nuốt mọi lỗi
-    (acceptance v0.9.12 — không bao giờ chặn tracking/onboarding).
-    """
-    _spawn_onboarding_task(
-        carrier_eta_service.fetch_carrier_eta(shipment_id),
-        name=f"carrier-eta-{shipment_id}",
-    )
-
-
 async def _finish_onboarding(
     leg_id: int, cache_name: str, result: scrape_client.IMOResolverResult | scrape_client.ScrapeError
 ) -> None:
@@ -139,9 +127,6 @@ async def _finish_onboarding(
                 )
             )
         await resolve_leg(session, leg_id, result.imo, result.mmsi, "deterministic_scrape")
-        leg = await session.get(ShipmentLeg, leg_id)
-        if leg is not None:
-            _spawn_carrier_eta_fetch(leg.shipment_id)
 
 
 async def _run_onboarding_scrape(
@@ -215,7 +200,6 @@ async def create_shipment(
 
     if payload.imo and payload.mmsi:
         await resolve_leg(session, leg_id, payload.imo, payload.mmsi, "manual")
-        _spawn_carrier_eta_fetch(shipment_id)
     else:
         cached = await _cached_registry_identity(session, vessel_name)
         # Kết thúc transaction đọc (autobegin) — resolve_leg tự mở session.begin().
@@ -223,7 +207,6 @@ async def create_shipment(
         if cached is not None:
             imo, mmsi = cached
             await resolve_leg(session, leg_id, imo, mmsi, "cache_hit")
-            _spawn_carrier_eta_fetch(shipment_id)
         else:
             _spawn_onboarding_task(
                 _run_onboarding_scrape(
@@ -357,7 +340,6 @@ async def resolve_manual(
     # Kết thúc transaction đọc (autobegin) — resolve_leg tự mở session.begin() (IC§3.2).
     await session.rollback()
     await resolve_leg(session, leg_id, payload.imo, payload.mmsi, "manual")
-    _spawn_carrier_eta_fetch(shipment_id)
     shipment = await _get_shipment_or_404(session, shipment_id)
     return await _detail(session, shipment)
 

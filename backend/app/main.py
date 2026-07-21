@@ -4,11 +4,18 @@ import asyncio
 import contextlib
 import logging
 from collections.abc import AsyncIterator
+from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+from starlette.middleware.sessions import SessionMiddleware
 
 from app.api import shipments, ws
+from app.api.deps import get_current_user
+from app.auth import routes as auth_routes
+from app.config import settings
 from app.services import reasoning_service
 from app.workers import ais_worker, tide_poll, trail_snapshot, weather_poll
 
@@ -40,6 +47,13 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 app = FastAPI(title="Shipment Tracking Demo", lifespan=lifespan)
 
 app.add_middleware(
+    SessionMiddleware,
+    secret_key=settings.SESSION_JWT_SECRET,
+    https_only=settings.COOKIE_SECURE,
+    same_site="lax",
+)
+
+app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],  # Vite dev server
     allow_credentials=True,
@@ -47,13 +61,34 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(auth_routes.router)
 app.include_router(shipments.router)
 app.include_router(ws.router)
 
 
-@app.get("/api/v1/health")
+@app.get("/api/v1/health", dependencies=[Depends(get_current_user)])
 async def health() -> dict[str, str]:
     return {"status": "ok"}
 
 
-# SPA fallback + StaticFiles: TASK-15
+# TASK-15: frontend build tĩnh (Dockerfile COPY dist → /app/static).
+_STATIC_DIR = Path("/app/static")
+
+if (_STATIC_DIR / "assets").is_dir():
+    app.mount("/assets", StaticFiles(directory=_STATIC_DIR / "assets"), name="assets")
+
+
+# Catch-all SPA fallback — đăng ký SAU mọi router /api,/ws (route order quyết định).
+@app.get("/{full_path:path}", include_in_schema=False)
+async def spa_fallback(full_path: str) -> FileResponse:
+    if full_path in ("api", "ws") or full_path.startswith(("api/", "ws/")):
+        raise HTTPException(status_code=404, detail="Not Found")
+    if full_path:
+        static_root = _STATIC_DIR.resolve()
+        candidate = (_STATIC_DIR / full_path).resolve()
+        if candidate.is_relative_to(static_root) and candidate.is_file():
+            return FileResponse(candidate)
+    index = _STATIC_DIR / "index.html"
+    if not index.is_file():
+        raise HTTPException(status_code=404, detail="Frontend build not found")
+    return FileResponse(index)
