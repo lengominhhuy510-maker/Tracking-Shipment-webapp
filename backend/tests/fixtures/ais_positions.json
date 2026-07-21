@@ -1,0 +1,188 @@
+[
+  {
+    "MessageType": "PositionReport",
+    "MetaData": {
+      "MMSI": 574000101,
+      "ShipName": "SYNTHETIC FIXTURE 01",
+      "latitude": 10.34521,
+      "longitude": 107.07713,
+      "time_utc": "2026-07-21 02:10:04.000000000 +0000 UTC"
+    },
+    "Message": {
+      "PositionReport": {
+        "Cog": 128.4,
+        "CommunicationState": 0,
+        "Latitude": 10.34521,
+        "Longitude": 107.07713,
+        "MessageID": 1,
+        "NavigationalStatus": 0,
+        "PositionAccuracy": true,
+        "Raim": false,
+        "RateOfTurn": 0,
+        "RepeatIndicator": 0,
+        "Sog": 11.2,
+        "Spare": 0,
+        "SpecialManoeuvreIndicator": 0,
+        "Timestamp": 4,
+        "TrueHeading": 127,
+        "UserID": 574000101,
+        "Valid": true
+      }
+    }
+  },
+  {
+    "MessageType": "PositionReport",
+    "MetaData": {
+      "MMSI": 574000102,
+      "ShipName": "SYNTHETIC FIXTURE 02",
+      "latitude": 10.71218,
+      "longitude": 106.79402,
+      "time_utc": "2026-07-21 02:10:09.000000000 +0000 UTC"
+    },
+    "Message": {
+      "PositionReport": {
+        "Cog": 311.0,
+        "CommunicationState": 0,
+        "Latitude": 10.71218,
+        "Longitude": 106.79402,
+        "MessageID": 1,
+        "NavigationalStatus": 0,
+        "PositionAccuracy": true,
+        "Raim": false,
+        "RateOfTurn": -2,
+        "RepeatIndicator": 0,
+        "Sog": 6.8,
+        "Spare": 0,
+        "SpecialManoeuvreIndicator": 0,
+        "Timestamp": 9,
+        "TrueHeading": 309,
+        "UserID": 574000102,
+        "Valid": true
+      }
+    }
+  },
+  {
+    "MessageType": "PositionReport",
+    "MetaData": {
+      "MMSI": 563000203,
+      "ShipName": "SYNTHETIC FIXTURE 03",
+      "latitude": 1.26405,
+      "longitude": 103.83987,
+      "time_utc": "2026-07-21 02:10:15.000000000 +0000 UTC"
+    },
+    "Message": {
+      "PositionReport": {
+        "Cog": 74.9,
+        "CommunicationState": 0,
+        "Latitude": 1.26405,
+        "Longitude": 103.83987,
+        "MessageID": 1,
+        "NavigationalStatus": 0,
+        "PositionAccuracy": true,
+        "Raim": false,
+        "RateOfTurn": 0,
+        "RepeatIndicator": 0,
+        "Sog": 14.5,
+        "Spare": 0,
+        "SpecialManoeuvreIndicator": 0,
+        "Timestamp": 15,
+        "TrueHeading": 75,
+        "UserID": 563000203,
+        "Valid": true
+      }
+    }
+  },
+  {
+    "MessageType": "PositionReport",
+    "MetaData": {
+      "MMSI": 477000304,
+      "ShipName": "SYNTHETIC FIXTURE 04",
+      "latitude": 9.51122,
+      "longitude": 108.20014,
+      "time_utc": "2026-07-21 02:10:22.000000000 +0000 UTC"
+    },
+    "Message": {
+      "PositionReport": {
+        "Cog": 201.3,
+        "CommunicationState": 0,
+        "Latitude": 9.51122,
+        "Longitude": 108.20014,
+        "MessageID": 1,
+        "NavigationalStatus": 0,
+        "PositionAccuracy": false,
+        "Raim": false,
+        "RateOfTurn": 1,
+        "RepeatIndicator": 0,
+        "Sog": 18.1,
+        "Spare": 0,
+        "SpecialManoeuvreIndicator": 0,
+        "Timestamp": 22,
+        "TrueHeading": 200,
+        "UserID": 477000304,
+        "Valid": true
+      }
+    }
+  },
+  {
+    "MessageType": "PositionReport",
+    "MetaData": {
+      "MMSI": 574000105,
+      "ShipName": "SYNTHETIC FIXTURE 05",
+      "latitude": 10.38914,
+      "longitude": 107.03256,
+      "time_utc": "2026-07-21 02:10:28.000000000 +0000 UTC"
+    },
+    "Message": {
+      "PositionReport": {
+        "Cog": 130.1,
+        "CommunicationState": 0,
+        "Latitude": 10.38914,
+        "Longitude": 107.03256,
+        "MessageID": 1,
+        "NavigationalStatus": 1,
+        "PositionAccuracy": true,
+        "Raim": false,
+        "RateOfTurn": 0,
+        "RepeatIndicator": 0,
+        "Sog": 0.1,
+        "Spare": 0,
+        "SpecialManoeuvreIndicator": 0,
+        "Timestamp": 28,
+        "TrueHeading": 511,
+        "UserID": 574000105,
+        "Valid": true
+      }
+    }
+  },
+  {
+    "MessageType": "PositionReport",
+    "MetaData": {
+      "MMSI": 636000406,
+      "ShipName": "SYNTHETIC FIXTURE 06",
+      "latitude": 5.90233,
+      "longitude": 105.44871,
+      "time_utc": "2026-07-21 02:10:33.000000000 +0000 UTC"
+    },
+    "Message": {
+      "PositionReport": {
+        "Cog": 38.7,
+        "CommunicationState": 0,
+        "Latitude": 5.90233,
+        "Longitude": 105.44871,
+        "MessageID": 1,
+        "NavigationalStatus": 0,
+        "PositionAccuracy": true,
+        "Raim": false,
+        "RateOfTurn": 0,
+        "RepeatIndicator": 0,
+        "Sog": 12.9,
+        "Spare": 0,
+        "SpecialManoeuvreIndicator": 0,
+        "Timestamp": 33,
+        "TrueHeading": 39,
+        "UserID": 636000406,
+        "Valid": true
+      }
+    }
+  }
+]
