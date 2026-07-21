@@ -8,6 +8,18 @@
   },
   "scripts": {
     "build": "tsc",
-    "start": "echo \"implemented in TASK-10\""
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "@playwright/mcp": "0.0.78",
+    "bullmq": "5.80.9",
+    "express": "5.2.1",
+    "playwright": "1.62.0-alpha-1783623505000",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@types/express": "5.0.6",
+    "@types/node": "26.1.1",
+    "typescript": "5.9.3"
   }
 }

@@ -3,8 +3,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import shipments
-
 app = FastAPI(title="Shipment Tracking Demo")
 
 app.add_middleware(
@@ -14,8 +12,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-app.include_router(shipments.router)
 
 
 @app.get("/api/v1/health")
