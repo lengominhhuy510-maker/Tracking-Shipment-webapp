@@ -2,7 +2,7 @@
   {
     "MessageType": "PositionReport",
     "MetaData": {
-      "MMSI": 574000101,
+      "MMSI": 570000001,
       "ShipName": "SYNTHETIC FIXTURE 01",
       "latitude": 10.34521,
       "longitude": 107.07713,
@@ -25,7 +25,7 @@
         "SpecialManoeuvreIndicator": 0,
         "Timestamp": 4,
         "TrueHeading": 127,
-        "UserID": 574000101,
+        "UserID": 570000001,
         "Valid": true
       }
     }
@@ -33,7 +33,7 @@
   {
     "MessageType": "PositionReport",
     "MetaData": {
-      "MMSI": 574000102,
+      "MMSI": 570000002,
       "ShipName": "SYNTHETIC FIXTURE 02",
       "latitude": 10.71218,
       "longitude": 106.79402,
@@ -56,7 +56,7 @@
         "SpecialManoeuvreIndicator": 0,
         "Timestamp": 9,
         "TrueHeading": 309,
-        "UserID": 574000102,
+        "UserID": 570000002,
         "Valid": true
       }
     }
@@ -64,7 +64,7 @@
   {
     "MessageType": "PositionReport",
     "MetaData": {
-      "MMSI": 563000203,
+      "MMSI": 570000003,
       "ShipName": "SYNTHETIC FIXTURE 03",
       "latitude": 1.26405,
       "longitude": 103.83987,
@@ -87,7 +87,7 @@
         "SpecialManoeuvreIndicator": 0,
         "Timestamp": 15,
         "TrueHeading": 75,
-        "UserID": 563000203,
+        "UserID": 570000003,
         "Valid": true
       }
     }
@@ -95,7 +95,7 @@
   {
     "MessageType": "PositionReport",
     "MetaData": {
-      "MMSI": 477000304,
+      "MMSI": 570000001,
       "ShipName": "SYNTHETIC FIXTURE 04",
       "latitude": 9.51122,
       "longitude": 108.20014,
@@ -118,7 +118,7 @@
         "SpecialManoeuvreIndicator": 0,
         "Timestamp": 22,
         "TrueHeading": 200,
-        "UserID": 477000304,
+        "UserID": 570000001,
         "Valid": true
       }
     }
@@ -126,7 +126,7 @@
   {
     "MessageType": "PositionReport",
     "MetaData": {
-      "MMSI": 574000105,
+      "MMSI": 570000002,
       "ShipName": "SYNTHETIC FIXTURE 05",
       "latitude": 10.38914,
       "longitude": 107.03256,
@@ -149,7 +149,7 @@
         "SpecialManoeuvreIndicator": 0,
         "Timestamp": 28,
         "TrueHeading": 511,
-        "UserID": 574000105,
+        "UserID": 570000002,
         "Valid": true
       }
     }
@@ -157,7 +157,7 @@
   {
     "MessageType": "PositionReport",
     "MetaData": {
-      "MMSI": 636000406,
+      "MMSI": 570000003,
       "ShipName": "SYNTHETIC FIXTURE 06",
       "latitude": 5.90233,
       "longitude": 105.44871,
@@ -180,7 +180,7 @@
         "SpecialManoeuvreIndicator": 0,
         "Timestamp": 33,
         "TrueHeading": 39,
-        "UserID": 636000406,
+        "UserID": 570000003,
         "Valid": true
       }
     }

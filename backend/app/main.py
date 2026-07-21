@@ -1,9 +1,38 @@
-"""Minimal FastAPI app — TASK-00 scaffold."""
+"""FastAPI app — embeds AIS worker + trail snapshot via lifespan (Spec §3.1)."""
+
+import asyncio
+import contextlib
+import logging
+from collections.abc import AsyncIterator
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI(title="Shipment Tracking Demo")
+from app.workers import ais_worker, trail_snapshot
+
+logger = logging.getLogger(__name__)
+
+
+@contextlib.asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+    """Start background workers on startup; cancel them cleanly on shutdown."""
+    tasks = [
+        asyncio.create_task(ais_worker.run(), name="ais_worker"),
+        asyncio.create_task(trail_snapshot.run(), name="trail_snapshot"),
+    ]
+    logger.info("started %d background worker(s)", len(tasks))
+    try:
+        yield
+    finally:
+        for task in tasks:
+            task.cancel()
+        for task in tasks:
+            with contextlib.suppress(asyncio.CancelledError):
+                await task
+        logger.info("background workers stopped")
+
+
+app = FastAPI(title="Shipment Tracking Demo", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
