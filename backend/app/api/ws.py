@@ -2,8 +2,6 @@
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
-from app.auth.jwt import verify_token
-
 router = APIRouter()
 
 
@@ -40,11 +38,7 @@ manager = ConnectionManager()
 
 @router.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket) -> None:
-    token = websocket.cookies.get("session_token")
-    if token is None or verify_token(token) is None:
-        await websocket.close(code=4401)
-        return
-
+    # TASK-14: verify session cookie, close 4401
     await manager.connect(websocket)
     try:
         while True:
