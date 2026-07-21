@@ -1,9 +1,6 @@
 """Shipments REST router (IC§3.2)."""
 
-import asyncio
-import logging
 from datetime import datetime, timezone
-from uuid import uuid4
 
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy import select
@@ -14,8 +11,7 @@ from app.api.deps import get_current_user, get_session
 from app.api.errors import raise_api_error
 from app.core.monitoring_mode import UnsupportedCombination, derive_monitoring_mode
 from app.core.normalize import normalize_container_no, normalize_vessel_name
-from app.db.base import async_session_factory
-from app.db.models import EtaHistory, Shipment, ShipmentLeg, VesselRegistry, VesselTrail
+from app.db.models import EtaHistory, Shipment, ShipmentLeg, VesselTrail
 from app.schemas.shipment import (
     EtaHistoryOut,
     ResolveManualIn,
@@ -25,16 +21,12 @@ from app.schemas.shipment import (
     ShipmentPatch,
     TrailPoint,
 )
-from app.services import scrape_client
-from app.services.leg_service import mark_leg_manual, resolve_leg
 
 router = APIRouter(
     prefix="/api/v1/shipments",
     tags=["shipments"],
     dependencies=[Depends(get_current_user)],
 )
-
-logger = logging.getLogger(__name__)
 
 _STATUS_ORDER = {"new": 0, "on_sea": 1, "arrived": 2, "delivered": 3}
 
@@ -79,71 +71,18 @@ def _active_leg(shipment: Shipment) -> ShipmentLeg | None:
     return next((leg for leg in shipment.legs if leg.is_active_leg), None)
 
 
-async def _cached_registry_identity(
-    session: AsyncSession, vessel_name: str
-) -> tuple[str, str | None] | None:
-    """Cache hit (Spec §6.7a) chỉ khi tên chuẩn hoá khớp đúng 1 IMO duy nhất."""
-    result = await session.execute(
-        select(VesselRegistry)
-        .where(VesselRegistry.vessel_name == vessel_name)
-        .order_by(VesselRegistry.resolved_at.desc(), VesselRegistry.id.desc())
-    )
-    rows = result.scalars().all()
-    if not rows or len({row.imo for row in rows}) != 1:
-        return None
-    return rows[0].imo, rows[0].mmsi
-
-
-# Giữ reference để task nền không bị GC trước khi chạy xong.
-_onboarding_tasks: set[asyncio.Task] = set()
-
-
-def _spawn_onboarding_task(coro, name: str) -> None:
-    task = asyncio.create_task(coro, name=name)
-    _onboarding_tasks.add(task)
-    task.add_done_callback(_onboarding_tasks.discard)
-
-
-async def _finish_onboarding(
-    leg_id: int, cache_name: str, result: scrape_client.IMOResolverResult | scrape_client.ScrapeError
-) -> None:
-    async with async_session_factory() as session:
-        if isinstance(result, scrape_client.ScrapeError):
-            await mark_leg_manual(session, leg_id, result.error_code)
-            return
-        # Cache registry trước (transaction riêng — resolve_leg tự mở session.begin()).
-        # Key = tên đã normalize từ request (IC§9) — tên VesselFinder trả về có thể
-        # kèm loại tàu ("EVER GIVEN CONTAINER SHIP") nên không dùng làm cache key.
-        async with session.begin():
-            session.add(
-                VesselRegistry(
-                    vessel_name=cache_name,
-                    imo=result.imo,
-                    mmsi=result.mmsi,
-                    resolved_via="vesselfinder",
-                )
-            )
-        await resolve_leg(session, leg_id, result.imo, result.mmsi, "deterministic_scrape")
-
-
-async def _run_onboarding_scrape(
-    leg_id: int, vessel_name: str, voyage_no: str | None, pol: str | None, pod: str | None
-) -> None:
-    """Task nền (không block response): scrape → resolve_leg | mark_leg_manual (Spec §6.7a)."""
-    try:
-        result = await scrape_client.resolve_imo(vessel_name, voyage_no, pol, pod)
-        await _finish_onboarding(leg_id, vessel_name, result)
-    except Exception:
-        logger.exception("onboarding scrape cho leg %s thất bại ngoài luồng error_code", leg_id)
-
-
-async def _run_onboarding_poll(leg_id: int, vessel_name: str, job_id: str) -> None:
-    """Task nền cho retry: job đã enqueue inline (trả job_id thật), chỉ còn poll."""
-    try:
-        result = await scrape_client.poll_imo_job(job_id)
-        await _finish_onboarding(leg_id, vessel_name, result)
-    except Exception:
-        logger.exception("onboarding poll job %s cho leg %s thất bại", job_id, leg_id)
+def _apply_resolved_identity(shipment: Shipment, leg: ShipmentLeg, imo: str, mmsi: str) -> None:
+    # TASK-11 thay bằng resolve_leg() — inline mirror leg→shipment (Spec §4.1 note)
+    leg.imo = imo
+    leg.mmsi = mmsi
+    leg.imo_resolved_via = "manual"
+    leg.onboarding_status = "resolved"
+    leg.onboarding_error = None
+    shipment.imo = imo
+    shipment.mmsi = mmsi
+    shipment.imo_resolved_via = "manual"
+    shipment.onboarding_status = "resolved"
+    shipment.onboarding_error = None
 
 
 @router.post("/", status_code=201, response_model=ShipmentDetail)
@@ -191,28 +130,13 @@ async def create_shipment(
     )
     session.add(leg)
     await session.flush()
-    leg_id = leg.id
-    shipment_id = shipment.id
-    await session.commit()
 
     if payload.imo and payload.mmsi:
-        await resolve_leg(session, leg_id, payload.imo, payload.mmsi, "manual")
-    else:
-        cached = await _cached_registry_identity(session, vessel_name)
-        # Kết thúc transaction đọc (autobegin) — resolve_leg tự mở session.begin().
-        await session.rollback()
-        if cached is not None:
-            imo, mmsi = cached
-            await resolve_leg(session, leg_id, imo, mmsi, "cache_hit")
-        else:
-            _spawn_onboarding_task(
-                _run_onboarding_scrape(
-                    leg_id, vessel_name, payload.voyage_no, payload.pol, payload.pod
-                ),
-                name=f"onboard-{leg_id}",
-            )
+        _apply_resolved_identity(shipment, leg, payload.imo, payload.mmsi)
+    # else: enqueue onboarding scrape — TASK-11 (chưa enqueue ở task này)
 
-    shipment = await _get_shipment_or_404(session, shipment_id)
+    await session.commit()
+    shipment = await _get_shipment_or_404(session, shipment.id)
     return await _detail(session, shipment)
 
 
@@ -317,10 +241,8 @@ async def resolve_manual(
     leg = _active_leg(shipment)
     if leg is None:
         raise_api_error(404, "SHIPMENT_NOT_FOUND", f"Lô #{shipment_id} không có leg active")
-    leg_id = leg.id
-    # Kết thúc transaction đọc (autobegin) — resolve_leg tự mở session.begin() (IC§3.2).
-    await session.rollback()
-    await resolve_leg(session, leg_id, payload.imo, payload.mmsi, "manual")
+    _apply_resolved_identity(shipment, leg, payload.imo, payload.mmsi)
+    await session.commit()
     shipment = await _get_shipment_or_404(session, shipment_id)
     return await _detail(session, shipment)
 
@@ -339,27 +261,6 @@ async def retry_onboarding(
     leg.onboarding_error = None
     shipment.onboarding_status = "pending"
     shipment.onboarding_error = None
-    leg_id, vessel_name, voyage_no, pol, pod = (
-        leg.id,
-        leg.vessel_name,
-        leg.voyage_no,
-        leg.pol,
-        leg.pod,
-    )
     await session.commit()
-
-    # Enqueue inline để trả job_id THẬT của /scrape-jobs (IC§3.3); poll ở task nền.
-    job_id = await scrape_client.enqueue_imo(vessel_name, voyage_no, pol, pod)
-    if isinstance(job_id, scrape_client.ScrapeError):
-        # Gate không enqueue được → fallback job_ref cục bộ, task nền tự retry
-        # trọn gói (enqueue+poll) và mark manual nếu vẫn lỗi.
-        job_ref = f"onboard-{leg_id}-{uuid4().hex[:8]}"
-        _spawn_onboarding_task(
-            _run_onboarding_scrape(leg_id, vessel_name, voyage_no, pol, pod), name=job_ref
-        )
-        return {"leg_id": leg_id, "job_id": job_ref}
-
-    _spawn_onboarding_task(
-        _run_onboarding_poll(leg_id, vessel_name, job_id), name=f"onboard-poll-{job_id}"
-    )
-    return {"leg_id": leg_id, "job_id": job_id}
+    # TASK-11: enqueue scrape job thật (POST /scrape-jobs) — stub trả job_id giả
+    return {"leg_id": leg.id, "job_id": "stub-task-11"}
