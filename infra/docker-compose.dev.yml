@@ -1,6 +1,0 @@
-# Dev override — map webapp ra host để khớp OAuth redirect URI localhost:1476.
-# Dùng: docker compose -f infra/docker-compose.yml -f infra/docker-compose.dev.yml up --build
-services:
-  webapp:
-    ports:
-      - "1476:1476"

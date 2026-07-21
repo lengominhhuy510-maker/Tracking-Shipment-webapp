@@ -164,15 +164,29 @@ async def test_recompute_eta_wrapper_reports_debounce(db) -> None:
     assert second.skipped_reason == "debounced"
 
 
-async def test_request_research_stub_returns_empty_finding(db) -> None:
+async def test_request_research_delegates_to_research_service(db, monkeypatch) -> None:
+    # TASK-09 replaced the TASK-08 stub: the tool now routes to research_service.
+    from app.services import research_service
+
     shipment_id = await _seed_one(db, _shipment())
+    calls: list[tuple[int, str | None]] = []
+
+    async def fake_request_research(sid: int, focus: str | None = None):
+        calls.append((sid, focus))
+        return tools.ResearchFindingOut(
+            event="delegated",
+            relevance="thap",
+            route_impact="",
+            confidence="thap",
+            sources=["https://example.invalid/delegated"],
+        )
+
+    monkeypatch.setattr(research_service, "request_research", fake_request_research)
 
     finding = await tools.request_research(shipment_id, focus="eo Malacca 48h")
 
-    assert finding.confidence == "thap"
-    assert finding.relevance == "thap"
-    assert len(finding.sources) >= 1
-    assert "TASK-09" in finding.event or "stub" in finding.event.lower()
+    assert calls == [(shipment_id, "eo Malacca 48h")]
+    assert finding.event == "delegated"
 
 
 # --- reasoning_service: note write + endpoint key-gate ---

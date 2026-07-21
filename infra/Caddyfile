@@ -1,8 +1,4 @@
-# TASK-15: reverse proxy hoàn chỉnh.
-# DOMAIN đặt trong .env; compose truyền vào container caddy (rỗng → fallback localhost):
-#   - DOMAIN=tracking.example.com → Caddy tự xin cert Let's Encrypt (auto-TLS 443).
-#   - DOMAIN=localhost (local) → Caddy phát cert self-signed nội bộ.
+# TASK-00: khung reverse proxy. Hoàn chỉnh (auto-TLS theo DOMAIN) ở TASK-15.
 {$DOMAIN:localhost} {
-	encode gzip
 	reverse_proxy webapp:1476
 }
