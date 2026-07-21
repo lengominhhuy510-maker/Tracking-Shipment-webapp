@@ -34,12 +34,7 @@ export function statusToMilestone(
   }
   ids.push("arrived", "delivered");
 
-  const currentId: MilestoneId =
-    status === "new"
-      ? "received_bl"
-      : status === "on_sea" && shipmentType === "transit"
-        ? "transit"
-        : status;
+  const currentId: MilestoneId = status === "new" ? "received_bl" : status;
   const currentIndex = ids.indexOf(currentId);
   const nodes = ids.map<MilestoneNode>((id, index) => ({
     id,

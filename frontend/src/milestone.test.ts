@@ -25,7 +25,7 @@ describe("statusToMilestone", () => {
       status: "on_sea" as const,
       atdIsNull: false,
       shipmentType: "transit" as const,
-      current: "transit",
+      current: "on_sea",
       nodes: ["received_bl", "departed", "on_sea", "transit", "arrived", "delivered"],
     },
     {
