@@ -1,0 +1,4 @@
+# TASK-00: khung reverse proxy. Hoàn chỉnh (auto-TLS theo DOMAIN) ở TASK-15.
+{$DOMAIN:localhost} {
+	reverse_proxy webapp:1476
+}

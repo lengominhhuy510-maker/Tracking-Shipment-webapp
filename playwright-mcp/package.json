@@ -1,0 +1,13 @@
+{
+  "name": "playwright-mcp",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "echo \"implemented in TASK-10\""
+  }
+}

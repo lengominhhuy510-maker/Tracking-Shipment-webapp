@@ -1,0 +1,13 @@
+[project]
+name = "shipment-tracking-backend"
+version = "0.1.0"
+description = "Shipment tracking demo backend (FastAPI)"
+requires-python = ">=3.12"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

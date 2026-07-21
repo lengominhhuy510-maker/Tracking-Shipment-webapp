@@ -1,0 +1,73 @@
+# TASK-00: khung 5 service theo IC§12. Hoàn chỉnh ở TASK-15.
+services:
+  caddy:
+    image: caddy:2
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      - DOMAIN=${DOMAIN:-}
+    depends_on:
+      - webapp
+    networks:
+      - internal
+
+  webapp:
+    build:
+      context: ..
+      dockerfile: backend/Dockerfile
+    env_file:
+      # required:false để `docker compose config` chạy được từ clone sạch chưa có .env
+      - path: ../.env
+        required: false
+    ports:
+      # dev: map 1476 (khớp OAuth redirect). Production: bỏ map, caddy proxy tới webapp:1476
+      - "1476:1476"
+    depends_on:
+      - db
+      - redis
+    networks:
+      - internal
+
+  playwright-mcp:
+    build:
+      context: ../playwright-mcp
+    # IC§0.1: Node KHÔNG nhận DATABASE_URL — chỉ REDIS_URL + SCRAPE_*
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - SCRAPE_REST_PORT=3000
+      - MCP_SSE_PORT=3001
+      - SCRAPE_CONCURRENCY=2
+      - SCRAPE_JOB_TIMEOUT_SECONDS=90
+    depends_on:
+      - redis
+    networks:
+      - internal
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=app
+      - POSTGRES_PASSWORD=app
+      - POSTGRES_DB=shipment_demo
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - internal
+
+  redis:
+    image: redis:7-alpine
+    networks:
+      - internal
+
+networks:
+  internal:
+
+volumes:
+  caddy_data:
+  caddy_config:
+  db_data:

@@ -1,11 +1,20 @@
-# Bootstrap .gitignore — TASK-00 sẽ mở rộng theo PROGRESS.md
+# Env files — chỉ template .env.example và .env.devtest2 được track
 .env
 .env.devtest
+
+# Python
 __pycache__/
 *.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+*.db
+
+# Node / frontend
 node_modules/
 frontend/dist/
-.venv/
-*.db
-.pytest_cache/
+.vite/
+
+# Worktrees
 .worktrees/
