@@ -123,7 +123,7 @@ Cột của 8 bảng gốc lấy đúng theo spec §4.1-4.8 (không chép lại 
 
 > **[v0.9.12] GIỮ NGUYÊN 4 giá trị `outcome` — KHÔNG thêm `partial_match`:** một mail vừa có container khớp vừa có container lạ (case §7.1 Mail 3) vẫn ghi `outcome='proposals_created'`; các container lạ đã lưu đầy đủ trong `unmatched_containers` (jsonb). Thêm `partial_match` sẽ **trùng thông tin** (nhìn `unmatched_containers` non-empty là biết có container lạ) mà không thêm giá trị query nào — nên chốt giữ 4 giá trị (`proposals_created | no_match | rejected_allowlist | parse_failed`). Quy tắc: có ≥1 proposal tạo được → `proposals_created` (bất kể có container lạ kèm hay không); không container nào khớp → `no_match`.
 
-> **[v0.9.12] Idempotency `agent_proposals`:** unique `(source_email_id, shipment_id)` (mục 2.3) đảm bảo xử lý lại CÙNG mail (VD `\Seen` bị reset, hoặc replay test) KHÔNG tạo proposal trùng — INSERT trùng bị DB chặn, code bắt `IntegrityError` → coi như đã xử lý (idempotent). Kết hợp với dedup `processed_emails.message_id` (chặn ở tầng application trước khi extract) tạo 2 lớp: dedup chặn xử-lý-lại, unique constraint chặn ghi-trùng nếu lọt qua.
+> **[v0.9.12] Idempotency `agent_proposals`:** unique `(source_email_id, shipment_id)` (mục 2.3) đảm bảo xử lý lại CÙNG mail (VD `\Seen` bị reset, hoặc replay test) KHÔNG tạo proposal trùng — code **pre-SELECT dedup theo cặp `(source_email_id, shipment_id)`** trước khi INSERT (đã tồn tại → coi như đã xử lý, idempotent); unique index DB là **backstop** chặn ghi-trùng nếu race lọt qua pre-SELECT. Kết hợp với dedup `processed_emails.message_id` (chặn ở tầng application trước khi extract) tạo 2 lớp: dedup chặn xử-lý-lại, pre-SELECT + unique constraint chặn ghi-trùng nếu lọt qua.
 
 > Ghi chú: `imap_uid` + `imap_folder` + `seen_set_at` là cột trace/operational, không dùng query thường — không cần index. `message_id` vẫn là PK + khóa dedup chính.
 
@@ -176,7 +176,7 @@ CREATE INDEX ix_registry_name ON vessel_registry(vessel_name);
   ```json
   { "detail": { "code": "SHIPMENT_NOT_FOUND", "message": "Không tìm thấy lô #42" } }
   ```
-  Frontend switch theo `detail.code`. Riêng 422 giữ nguyên shape list mặc định của FastAPI (Pydantic errors). Danh mục `code`: `SHIPMENT_NOT_FOUND`, `PROPOSAL_NOT_FOUND`, `PROPOSAL_ALREADY_DECIDED`, `FINDING_NOT_FOUND`, `IMMUTABLE_FIELD`, `UNSUPPORTED_INCOTERM_COMBINATION`, `INVALID_CONTAINER_NO`, `ONBOARDING_NOT_RETRYABLE`, `UNAUTHENTICATED`, `FORBIDDEN`.
+  Frontend switch theo `detail.code`. Riêng 422 giữ nguyên shape list mặc định của FastAPI (Pydantic errors). Danh mục `code`: `SHIPMENT_NOT_FOUND`, `PROPOSAL_NOT_FOUND`, `PROPOSAL_ALREADY_DECIDED`, `FINDING_NOT_FOUND`, `IMMUTABLE_FIELD`, `UNSUPPORTED_INCOTERM_COMBINATION`, `INVALID_CONTAINER_NO`, `ONBOARDING_NOT_RETRYABLE`, `UNAUTHENTICATED`, `FORBIDDEN`, `LLM_NOT_CONFIGURED` (HTTP 503 — LLM chưa cấu hình/không khả dụng, các route cần LLM trả code này), `UNKNOWN_PROVIDER` (HTTP 404 — `{provider}` trong `/auth/login/{provider}` / `/auth/callback/{provider}` không nằm trong danh sách hỗ trợ).
 - **Auth:** mọi route `/api/v1/*` yêu cầu session JWT cookie (mục 10). 401 trả JSON như trên — **không server-redirect** (SPA tự điều hướng về màn login).
 
 ### 3.2 Bảng endpoint đầy đủ
@@ -314,6 +314,7 @@ def recompute_eta(shipment_id: int) -> ETAComputeResult:
                                         #   "no_valid_atd"    — guard 9b (atd null hoặc eta_original<=atd) → bỏ deviation, ETA vẫn tính
                                         #   "no_position"     — chưa có tọa độ AIS (current_lat/lon null) → skip recompute
                                         #   "no_pod_coords"   — POD chưa geocode được (geocode_port trả None) → skip recompute
+                                        #   "debounced"       — recompute bị debounce (gọi lại quá sớm sau lần tính trước) → skip, không tính mới
     — LLM thấy được VÌ SAO ra con số (phòng thủ 'không hộp đen'). Dấu deviation: dương=trễ, âm=sớm (§6.3)."""
 
 def get_tide_window(shipment_id: int) -> TideWindowResult:
@@ -648,6 +649,7 @@ Kỳ vọng: 2 proposal (cont 1 + 4), container lạ → `processed_emails.unmat
 - **Frontend:** convert sang timezone **trình duyệt** khi hiển thị (dayjs/Intl). Không gửi kèm bản local từ backend.
 - **Giới hạn ghi nhận (nêu khi bảo vệ):** giờ triều/ETA của cảng nước ngoài (POD lô xuất) cũng hiển thị theo giờ trình duyệt (giờ VN), KHÔNG theo giờ địa phương cảng — chấp nhận ở MVP vì người dùng là nhân viên U&I tại VN; hiển thị giờ địa phương cảng ghi future work.
 - **Tính toán ETA/deviation:** toàn bộ bằng epoch/UTC — timezone chỉ là chuyện hiển thị.
+- **Known Limitation (D-05):** model nội bộ/LLM output **coerce naive datetime → UTC** (nới có chủ đích — dữ liệu từ LLM/nguồn ngoài có thể thiếu tzinfo, coerce thay vì reject để không rớt pipeline); biên API công khai vẫn **reject** naive datetime như quy ước trên.
 
 ---
 
