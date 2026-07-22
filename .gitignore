@@ -18,4 +18,5 @@ frontend/dist/
 
 # Worktrees
 .worktrees/
+.claude/worktrees/
 playwright-mcp/dist/
