@@ -177,8 +177,7 @@ def test_no_second_incoterm_table_drift():
         text = path.read_text(encoding="utf-8")
         has_ef_group = all(code in text for code in EF)
         has_cd_group = all(code in text for code in CD)
-        # Enum đầy đủ 11 giá trị (has cả EF lẫn CD) = định nghĩa enum/CHECK hợp lệ, KHÔNG phải bảng mode.
-        full_enum = has_ef_group and has_cd_group
+        # Enum đầy đủ 11 giá trị (có cả EF lẫn CD) = định nghĩa enum/CHECK hợp lệ, KHÔNG phải bảng mode.
         # Subgroup riêng lẻ (chỉ E/F hoặc chỉ C/D) = dấu hiệu module tự cài bảng nhóm.
         standalone_subgroup = (has_ef_group != has_cd_group)
         if standalone_subgroup:

@@ -26,14 +26,13 @@ Mode: offline. KHÔNG IMAP thật, KHÔNG LLM thật.
 Các cột SoT map → test function ghi ở đầu mỗi nhóm; xem qa_reports/QA-09.md.
 """
 
-import logging
 from unittest.mock import AsyncMock, patch
 
 import pytest
 from sqlalchemy import delete, func, select
 from sqlalchemy.exc import IntegrityError
 
-from app.agents.email_agent import EmailExtraction, EmailParseError
+from app.agents.email_agent import EmailParseError
 from app.db.enums import EMAIL_OUTCOME
 from app.db.models import AgentProposal, ProcessedEmail, Shipment
 from app.integrations.errors import ExternalIntegrationError
@@ -46,7 +45,6 @@ from app.services.email_service import (
 from tests.email_helpers import (
     CARRIER_DOMAINS,
     FORWARDER_EMAILS,
-    db,  # noqa: F401 — shared in-memory DB fixture
     fake_extract,
     load_fixture,
     make_extraction,
