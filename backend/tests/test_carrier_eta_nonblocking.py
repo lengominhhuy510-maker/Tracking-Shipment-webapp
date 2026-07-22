@@ -142,7 +142,9 @@ async def test_shipment_without_eta_original_still_ais_tracked(db, monkeypatch):
         assert await desired_mmsi_set(session) == {"477220100"}
 
 
-async def test_resolve_manual_api_ok_when_carrier_eta_agent_raises(db, monkeypatch):
+async def test_resolve_manual_api_ok_when_carrier_eta_agent_raises(
+    db, monkeypatch, auth_override
+):
     """Luồng API TASK-11 không bị chặn: resolve-manual trả 200 resolved dù agent nổ."""
     monkeypatch.setattr(
         carrier_eta_agent,

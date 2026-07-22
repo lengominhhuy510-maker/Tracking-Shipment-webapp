@@ -28,7 +28,7 @@ async def db():
 
 
 @pytest.fixture
-async def client(db):
+async def client(db, auth_override):
     async def override_session():
         async with db() as session:
             yield session

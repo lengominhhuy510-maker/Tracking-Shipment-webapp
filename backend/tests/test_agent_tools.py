@@ -254,7 +254,9 @@ async def test_run_agent_a_updates_last_note_when_eta_unchanged(db, reasoning) -
         assert rows[0].note == "Nhận định: ETA ổn định."
 
 
-async def test_analyze_endpoint_without_key_returns_clear_error(db, monkeypatch) -> None:
+async def test_analyze_endpoint_without_key_returns_clear_error(
+    db, monkeypatch, auth_override
+) -> None:
     from httpx import ASGITransport, AsyncClient
 
     from app.api.deps import get_session

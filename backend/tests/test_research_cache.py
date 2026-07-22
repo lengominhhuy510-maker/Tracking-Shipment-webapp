@@ -271,7 +271,7 @@ async def test_web_search_maps_integration_error_to_empty_list(monkeypatch) -> N
 
 
 @pytest.fixture
-async def client(db):
+async def client(db, auth_override):
     from httpx import ASGITransport, AsyncClient
 
     from app.api.deps import get_session

@@ -75,7 +75,7 @@ def test_devtest_template_keys_and_replay_mode() -> None:
     assert not missing, f".env.devtest2 missing keys present in Settings: {sorted(missing)}"
 
 
-async def test_health_endpoint() -> None:
+async def test_health_endpoint(auth_override) -> None:
     transport = ASGITransport(app=app)
     async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
         resp = await client.get("/api/v1/health")
