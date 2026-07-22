@@ -408,14 +408,15 @@ async def test_post_logout_204_clears_cookie(client):
 
 
 async def test_logout_clears_cookie_via_actual_route(client):
-    """Behavioral probe of the AS-BUILT logout (GET) — documents cookie clearing.
+    """Behavioral probe of the AS-BUILT logout — documents cookie clearing.
 
-    IC§3.2 expects POST→204; the app exposes GET→200 that deletes the cookie
-    with Max-Age=0. This asserts the clearing works on whatever verb the app
-    actually serves, to characterise the drift without asserting the wrong verb.
+    Originally probed GET→200 (as-built drift); after QA14-F1 the app serves
+    POST-only /auth/logout → 204, so the probe verb moved to POST. This asserts
+    the clearing works on the verb the app actually serves.
     """
-    r = await client.get("/auth/logout", follow_redirects=False)
-    # Characterise as-built status (200) and confirm the cookie is cleared:
+    r = await client.post("/auth/logout", follow_redirects=False)
+    # Probe verb updated GET→POST after BE changed to POST-only (QA14-F1 fix).
+    # Assertion kept lenient (200,204) to document clearing on whatever status is returned:
     assert r.status_code in (200, 204)
     raw = _session_cookie_header(r)
     assert raw is not None, "logout did not emit a session_token Set-Cookie"

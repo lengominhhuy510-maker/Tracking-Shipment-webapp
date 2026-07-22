@@ -7,8 +7,9 @@ provider_sub) → issue session JWT → HttpOnly cookie → 302 /.
 
 from datetime import datetime, timezone
 
+from authlib.integrations.base_client import OAuthError
 from fastapi import APIRouter, Depends, Request
-from fastapi.responses import JSONResponse, RedirectResponse, Response
+from fastapi.responses import RedirectResponse, Response
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -52,7 +53,12 @@ async def login(provider: str, request: Request):
 async def callback(provider: str, request: Request, session: AsyncSession = Depends(get_session)):
     _check_provider(provider)
     client = oauth.create_client(provider)
-    token = await client.authorize_access_token(request)
+    try:
+        token = await client.authorize_access_token(request)
+    except OAuthError:
+        raise_api_error(
+            401, "UNAUTHENTICATED", "OAuth callback bị từ chối (state/token không hợp lệ)"
+        )
     userinfo = token.get("userinfo")
     if not userinfo or not userinfo.get("sub"):
         raise_api_error(401, "UNAUTHENTICATED", "OAuth callback thiếu id_token claims")
@@ -99,8 +105,8 @@ async def me(user: User = Depends(get_current_user)) -> dict:
     }
 
 
-@router.get("/logout")
+@router.post("/logout", status_code=204)
 async def logout() -> Response:
-    response = JSONResponse({"status": "ok"})
+    response = Response(status_code=204)
     response.delete_cookie(COOKIE_NAME, path="/")
     return response

@@ -195,9 +195,9 @@ export default function App() {
         <h1>Shipment Monitor</h1>
         <span className="user-chip">
           {auth.user.name ?? auth.user.email} ({auth.user.role})
-          <a className="btn-logout" href="/auth/logout" onClick={(event) => {
+          <a className="btn-logout" href="#" onClick={(event) => {
             event.preventDefault();
-            fetch("/auth/logout", { credentials: "same-origin" })
+            fetch("/auth/logout", { method: "POST", credentials: "same-origin" })
               .finally(() => setAuth({ status: "anonymous" }));
           }}>Đăng xuất</a>
         </span>
