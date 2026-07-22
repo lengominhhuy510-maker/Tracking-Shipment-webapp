@@ -175,8 +175,8 @@ async def recompute_eta(session: AsyncSession, shipment_id: int) -> ETAComputeRe
             shipment_id,
             {
                 "deviation_pct": result.deviation_pct,
-                "eta_current": result.eta_tier2.isoformat(),
-                "eta_original": shipment.eta_original.isoformat()
+                "eta_current": result.eta_tier2.isoformat().replace("+00:00", "Z"),
+                "eta_original": shipment.eta_original.isoformat().replace("+00:00", "Z")
                 if shipment.eta_original
                 else None,
             },
@@ -185,8 +185,10 @@ async def recompute_eta(session: AsyncSession, shipment_id: int) -> ETAComputeRe
     await broadcast_eta_update(
         shipment_id,
         {
-            "eta_tier1": result.eta_tier1.isoformat() if result.eta_tier1 else None,
-            "eta_tier2": result.eta_tier2.isoformat(),
+            "eta_tier1": result.eta_tier1.isoformat().replace("+00:00", "Z")
+            if result.eta_tier1
+            else None,
+            "eta_tier2": result.eta_tier2.isoformat().replace("+00:00", "Z"),
             "avg_sog_kn": result.avg_sog_kn,
             "distance_remaining_nm": result.distance_remaining_nm,
             "factors_applied": result.factors_applied,
