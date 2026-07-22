@@ -64,7 +64,11 @@ class WsStub:
 
 
 @pytest.fixture
-async def db():
+async def db(monkeypatch):
+    # Force seed branch (d) — offline placeholder vessels — regardless of any
+    # DEV_SEED_VESSEL_* in the local .env, so shipment #1 keeps the fixture
+    # MMSI 570000001 that ais_positions.json replays.
+    monkeypatch.setattr(settings, "DEV_SEED_VESSEL_NAME", "")
     engine = create_async_engine("sqlite+aiosqlite://")
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
