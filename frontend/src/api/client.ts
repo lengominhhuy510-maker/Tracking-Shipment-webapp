@@ -164,7 +164,7 @@ export function getShipments(filters: ShipmentFilters = {}): Promise<ShipmentLis
   if (filters.status) params.set("status", filters.status);
   if (filters.direction) params.set("direction", filters.direction);
   const query = params.size > 0 ? `?${params.toString()}` : "";
-  return request<ShipmentListItem[]>(`/shipments${query}`);
+  return request<ShipmentListItem[]>(`/shipments/${query}`);
 }
 
 export function getShipment(id: number): Promise<ShipmentDetail> {
@@ -180,8 +180,44 @@ export function getShipmentEtaHistory(id: number): Promise<EtaHistory[]> {
 }
 
 export function createShipment(shipment: ShipmentCreate): Promise<ShipmentDetail> {
-  return request<ShipmentDetail>("/shipments", {
+  return request<ShipmentDetail>("/shipments/", {
     method: "POST",
     body: JSON.stringify(shipment),
+  });
+}
+
+export type ProposalStatus = "pending" | "approved" | "rejected";
+
+export interface ProposalExtracted {
+  new_eta?: string | null;
+  reason?: string | null;
+  containers?: string[] | null;
+  [key: string]: unknown;
+}
+
+export interface Proposal {
+  id: number;
+  shipment_id: number | null;
+  source_email_id: string;
+  extracted_json: ProposalExtracted | null;
+  proposed_action: string | null;
+  status: ProposalStatus;
+  decided_by: number | null;
+  created_at: string | null;
+  decided_at: string | null;
+}
+
+export function getProposals(status: ProposalStatus = "pending"): Promise<Proposal[]> {
+  return request<Proposal[]>(`/agent-proposals?status=${status}`);
+}
+
+export function approveProposal(id: number): Promise<Proposal> {
+  return request<Proposal>(`/agent-proposals/${id}/approve`, { method: "POST" });
+}
+
+export function rejectProposal(id: number, reason?: string): Promise<Proposal> {
+  return request<Proposal>(`/agent-proposals/${id}/reject`, {
+    method: "POST",
+    body: JSON.stringify({ reason: reason ?? null }),
   });
 }

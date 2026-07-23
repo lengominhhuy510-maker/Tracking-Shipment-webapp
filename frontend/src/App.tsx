@@ -5,6 +5,7 @@ import ShipmentList from "./components/ShipmentList";
 import ShipmentDetail from "./components/ShipmentDetail";
 import CreateShipmentForm from "./components/CreateShipmentForm";
 import Login, { type AuthUser } from "./components/Login";
+import ProposalsPanel from "./components/ProposalsPanel";
 
 const APP_STYLES = `
   body { margin: 0; font-family: "Segoe UI", system-ui, sans-serif; background: #f4f6f8; color: #1f2937; }
@@ -58,9 +59,19 @@ const APP_STYLES = `
   .btn-login:hover { border-color: #1d4ed8; color: #1d4ed8; }
   .user-chip { font-size: 13px; color: #6b7280; display: flex; align-items: center; gap: 8px; }
   .btn-logout { padding: 4px 10px; border-radius: 6px; border: 1px solid #d1d5db; background: #fff; cursor: pointer; font-size: 12px; }
+  .view-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+  .view-tab { padding: 6px 14px; border-radius: 6px; border: 1px solid #d1d5db; background: #fff; cursor: pointer; }
+  .view-tab.active { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
+  .proposal-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px 16px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 10px; }
+  .proposal-card-head { display: flex; justify-content: space-between; align-items: center; }
+  .status-badge.proposal-pending { background: #fef3c7; color: #b45309; }
+  .proposal-actions { display: flex; gap: 8px; }
+  .btn-approve { padding: 6px 14px; border-radius: 6px; border: 1px solid #15803d; background: #15803d; color: #fff; cursor: pointer; }
+  .btn-reject { padding: 6px 14px; border-radius: 6px; border: 1px solid #b91c1c; background: #fff; color: #b91c1c; cursor: pointer; }
+  .btn-approve:disabled, .btn-reject:disabled { opacity: 0.6; cursor: default; }
 `;
 
-type View = "list" | "detail" | "create";
+type View = "list" | "detail" | "create" | "proposals";
 type AuthState =
   | { status: "loading" }
   | { status: "anonymous" }
@@ -208,6 +219,12 @@ export default function App() {
           <button type="button" onClick={() => setBanner(null)} style={{ marginLeft: 8 }}>Đóng</button>
         </div>
       )}
+      {(view === "list" || view === "proposals") && (
+        <nav className="view-tabs">
+          <button type="button" className={view === "list" ? "view-tab active" : "view-tab"} onClick={() => setView("list")}>Lô hàng</button>
+          <button type="button" className={view === "proposals" ? "view-tab active" : "view-tab"} onClick={() => setView("proposals")}>Đề xuất Agent</button>
+        </nav>
+      )}
       {view === "list" && (
         <ShipmentList
           shipments={shipments}
@@ -226,6 +243,15 @@ export default function App() {
             });
           }}
           onCancel={() => setView("list")}
+        />
+      )}
+      {view === "proposals" && (
+        <ProposalsPanel
+          onDecided={() => {
+            void refetchShipments().catch((error: unknown) => {
+              console.warn("List refetch after proposal decision failed", error);
+            });
+          }}
         />
       )}
       {view === "detail" && openShipment && (
