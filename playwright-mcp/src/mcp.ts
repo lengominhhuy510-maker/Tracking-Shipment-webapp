@@ -19,7 +19,7 @@ export function startMcpServer(): ChildProcess {
 
   const child = spawn(
     process.execPath,
-    [binPath, "--port", MCP_SSE_PORT, "--host", "0.0.0.0", "--headless", "--isolated"],
+    [binPath, "--port", MCP_SSE_PORT, "--host", "0.0.0.0", "--allowed-hosts", "playwright-mcp:3001", "--headless", "--isolated"],
     { stdio: "inherit" },
   );
   child.on("exit", (code, signal) => {
