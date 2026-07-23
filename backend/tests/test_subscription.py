@@ -101,6 +101,20 @@ async def test_desired_mmsi_set_strips_whitespace(session):
     assert await desired_mmsi_set(session) == {"570000001"}
 
 
+async def test_desired_mmsi_set_rejects_unicode_digits(session):
+    # Full-width digits match Unicode-aware \d but are NOT ASCII 0-9 → must be
+    # rejected so garbage never reaches aisstream (re.ASCII flag).
+    session.add_all(
+        [
+            _shipment("BL-FULLWIDTH", "１２３４５６７８９", "on_sea", "resolved"),
+            _shipment("BL-VALID", "563095400", "on_sea", "resolved"),
+        ]
+    )
+    await session.commit()
+
+    assert await desired_mmsi_set(session) == {"563095400"}
+
+
 async def test_desired_mmsi_set_empty_db(session):
     assert await desired_mmsi_set(session) == set()
 

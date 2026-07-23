@@ -13,7 +13,7 @@ from sqlalchemy import select
 from app.db.models import Shipment
 
 _ACTIVE_EXCLUDED = ("arrived", "delivered")
-_MMSI_RE = re.compile(r"^\d{9}$")  # đúng 9 chữ số ASCII (ITU MMSI)
+_MMSI_RE = re.compile(r"^\d{9}$", re.ASCII)  # đúng 9 chữ số ASCII (ITU MMSI)
 
 
 async def desired_mmsi_set(session) -> set[str]:
