@@ -6,12 +6,14 @@ can trigger a fast-path resubscribe between the 60s polls.
 """
 
 import asyncio
+import re
 
 from sqlalchemy import select
 
 from app.db.models import Shipment
 
 _ACTIVE_EXCLUDED = ("arrived", "delivered")
+_MMSI_RE = re.compile(r"^\d{9}$")  # đúng 9 chữ số ASCII (ITU MMSI)
 
 
 async def desired_mmsi_set(session) -> set[str]:
@@ -23,7 +25,8 @@ async def desired_mmsi_set(session) -> set[str]:
         .where(Shipment.mmsi.is_not(None))
     )
     rows = await session.execute(stmt)
-    return {mmsi for (mmsi,) in rows if mmsi}
+    cleaned = (str(raw).strip() for (raw,) in rows if raw)
+    return {m for m in cleaned if _MMSI_RE.match(m)}
 
 
 class ResubscribeSignal:

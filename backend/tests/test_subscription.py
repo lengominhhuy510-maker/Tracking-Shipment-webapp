@@ -54,6 +54,53 @@ async def test_desired_mmsi_set_filters_by_status(session):
     assert result == {"570000001", "570000002"}
 
 
+async def test_desired_mmsi_set_excludes_malformed_mmsi(session):
+    session.add_all(
+        [
+            _shipment("BL-BAD-1", "# tùy chọn shortcut, 9 digits", "on_sea", "resolved"),
+            _shipment("BL-BAD-2", "12345", "on_sea", "resolved"),
+            _shipment("BL-BAD-3", "1234567890", "on_sea", "resolved"),
+            _shipment("BL-BAD-4", "ABCDEFGHI", "on_sea", "resolved"),
+            _shipment("BL-BAD-5", "57000a", "on_sea", "resolved"),
+            _shipment("BL-VALID", "563095400", "on_sea", "resolved"),
+        ]
+    )
+    await session.commit()
+
+    assert await desired_mmsi_set(session) == {"563095400"}
+
+
+async def test_desired_mmsi_set_bad_entry_does_not_drop_valid(session):
+    session.add_all(
+        [
+            _shipment("BL-GOOD", "563095400", "on_sea", "resolved"),
+            _shipment(
+                "BL-GARBAGE",
+                "# tùy chọn shortcut, 9 digits",
+                "on_sea",
+                "resolved",
+            ),
+        ]
+    )
+    await session.commit()
+
+    assert await desired_mmsi_set(session) == {"563095400"}
+
+
+async def test_desired_mmsi_set_preserves_leading_zeros(session):
+    session.add(_shipment("BL-LEADING-ZERO", "005000001", "on_sea", "resolved"))
+    await session.commit()
+
+    assert "005000001" in await desired_mmsi_set(session)
+
+
+async def test_desired_mmsi_set_strips_whitespace(session):
+    session.add(_shipment("BL-WHITESPACE", " 570000001 ", "on_sea", "resolved"))
+    await session.commit()
+
+    assert await desired_mmsi_set(session) == {"570000001"}
+
+
 async def test_desired_mmsi_set_empty_db(session):
     assert await desired_mmsi_set(session) == set()
 
