@@ -46,6 +46,9 @@ const APP_STYLES = `
   .vessel-map-empty { padding: 40px; text-align: center; color: #6b7280; background: #fff; }
   .eta-history table { width: 100%; border-collapse: collapse; background: #fff; }
   .eta-history th, .eta-history td { padding: 8px 10px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 13px; }
+  .env-conditions { margin: 16px 0; }
+  .tide-extremes { width: 100%; border-collapse: collapse; background: #fff; margin-top: 8px; }
+  .tide-extremes th, .tide-extremes td { padding: 8px 10px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 13px; }
   .create-shipment-form { display: flex; flex-direction: column; gap: 10px; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; max-width: 480px; }
   .create-shipment-form label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; }
   .create-shipment-form input, .create-shipment-form select { padding: 6px 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; }

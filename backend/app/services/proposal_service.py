@@ -60,68 +60,74 @@ async def approve(
     proposal_id: int,
     user_id: int,
 ) -> tuple[AgentProposal, RolloverJob | None]:
-    """Approve one pending proposal; returns the rollover job to run post-commit."""
+    """Approve one pending proposal; returns the rollover job to run post-commit.
+
+    Mutate trên transaction hiện có rồi ``session.commit()`` (pattern như
+    shipments ``patch_shipment``). KHÔNG dùng ``session.begin()``: session từ
+    request đã autobegin sẵn (``get_current_user`` đọc User) → ``begin()`` sẽ báo
+    "A transaction is already begun on this Session".
+    """
     rollover: RolloverJob | None = None
-    async with session.begin():
-        proposal = await _get_pending(session, proposal_id)
-        proposal.status = "approved"
-        proposal.decided_by = user_id
-        proposal.decided_at = datetime.now(UTC)
+    proposal = await _get_pending(session, proposal_id)
+    proposal.status = "approved"
+    proposal.decided_by = user_id
+    proposal.decided_at = datetime.now(UTC)
 
-        extraction = (
-            EmailExtraction.model_validate(proposal.extracted_json)
-            if proposal.extracted_json
-            else None
-        )
-        shipment = (
-            await session.get(Shipment, proposal.shipment_id)
-            if proposal.shipment_id is not None
-            else None
-        )
+    extraction = (
+        EmailExtraction.model_validate(proposal.extracted_json)
+        if proposal.extracted_json
+        else None
+    )
+    shipment = (
+        await session.get(Shipment, proposal.shipment_id)
+        if proposal.shipment_id is not None
+        else None
+    )
 
-        if extraction is not None and shipment is not None:
-            if extraction.new_eta is not None:
-                shipment.eta_current = extraction.new_eta
-                session.add(
-                    EtaHistory(
-                        shipment_id=shipment.id,
-                        eta_value=extraction.new_eta,
-                        source="email_agent",
-                        note=f"Proposal #{proposal.id} approved",
-                    )
-                )
-
-            if extraction.new_vessel_name:
-                active_leg = (
-                    await session.execute(
-                        select(ShipmentLeg)
-                        .where(ShipmentLeg.shipment_id == shipment.id)
-                        .where(ShipmentLeg.is_active_leg)
-                    )
-                ).scalar_one_or_none()
-                if active_leg is None:
-                    raise RuntimeError(f"shipment {shipment.id} không có active leg")
-                new_vessel = normalize_vessel_name(extraction.new_vessel_name)
-                active_leg.superseded_at = datetime.now(UTC)
-                new_leg = ShipmentLeg(
+    if extraction is not None and shipment is not None:
+        if extraction.new_eta is not None:
+            shipment.eta_current = extraction.new_eta
+            session.add(
+                EtaHistory(
                     shipment_id=shipment.id,
-                    leg_no=active_leg.leg_no,
-                    vessel_name=new_vessel,
-                    voyage_no=extraction.to_voyage,
-                    pol=active_leg.pol,
-                    pod=active_leg.pod,
-                    onboarding_status="pending",
-                    is_active_leg=False,
+                    eta_value=extraction.new_eta,
+                    source="email_agent",
+                    note=f"Proposal #{proposal.id} approved",
                 )
-                session.add(new_leg)
-                await session.flush()
-                rollover = RolloverJob(
-                    new_leg_id=new_leg.id,
-                    vessel_name=new_vessel,
-                    voyage_no=extraction.to_voyage,
-                    pol=active_leg.pol,
-                    pod=active_leg.pod,
+            )
+
+        if extraction.new_vessel_name:
+            active_leg = (
+                await session.execute(
+                    select(ShipmentLeg)
+                    .where(ShipmentLeg.shipment_id == shipment.id)
+                    .where(ShipmentLeg.is_active_leg)
                 )
+            ).scalar_one_or_none()
+            if active_leg is None:
+                raise RuntimeError(f"shipment {shipment.id} không có active leg")
+            new_vessel = normalize_vessel_name(extraction.new_vessel_name)
+            active_leg.superseded_at = datetime.now(UTC)
+            new_leg = ShipmentLeg(
+                shipment_id=shipment.id,
+                leg_no=active_leg.leg_no,
+                vessel_name=new_vessel,
+                voyage_no=extraction.to_voyage,
+                pol=active_leg.pol,
+                pod=active_leg.pod,
+                onboarding_status="pending",
+                is_active_leg=False,
+            )
+            session.add(new_leg)
+            await session.flush()
+            rollover = RolloverJob(
+                new_leg_id=new_leg.id,
+                vessel_name=new_vessel,
+                voyage_no=extraction.to_voyage,
+                pol=active_leg.pol,
+                pod=active_leg.pod,
+            )
+    await session.commit()
     return proposal, rollover
 
 
@@ -131,11 +137,13 @@ async def reject(
     user_id: int,
     reason: str | None = None,
 ) -> AgentProposal:
-    async with session.begin():
-        proposal = await _get_pending(session, proposal_id)
-        proposal.status = "rejected"
-        proposal.decided_by = user_id
-        proposal.decided_at = datetime.now(UTC)
+    # Mutate trên transaction hiện có rồi commit (pattern patch_shipment) — session
+    # từ request đã autobegin nên session.begin() sẽ báo "already begun".
+    proposal = await _get_pending(session, proposal_id)
+    proposal.status = "rejected"
+    proposal.decided_by = user_id
+    proposal.decided_at = datetime.now(UTC)
+    await session.commit()
     if reason:
         logger.info("proposal %d rejected bởi user %d: %s", proposal_id, user_id, reason)
     return proposal

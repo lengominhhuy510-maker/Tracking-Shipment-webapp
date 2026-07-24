@@ -11,6 +11,12 @@ interface ShipmentDetailProps {
   onBack: () => void;
 }
 
+interface TideExtreme {
+  time: string;
+  height: number;
+  type: string;
+}
+
 export default function ShipmentDetail({ shipment, deviationAlert, onBack }: ShipmentDetailProps) {
   const progress = statusToMilestone(shipment.status, shipment.atd === null, shipment.shipment_type);
 
@@ -45,6 +51,81 @@ export default function ShipmentDetail({ shipment, deviationAlert, onBack }: Shi
         cog={shipment.current_cog}
         vesselName={shipment.vessel_name}
       />
+
+      <section className="env-conditions">
+        <h3>Điều kiện biển</h3>
+        {(() => {
+          const env = shipment.env;
+          const hasWeather = env && env.weather_fetched_at !== null;
+          const hasTide = env && env.tide_fetched_at !== null && (env.tide_extremes?.length ?? 0) > 0;
+          if (!hasWeather && !hasTide) {
+            return <p>Chưa có dữ liệu sóng / gió / thủy triều.</p>;
+          }
+          return (
+            <>
+              <dl className="shipment-facts">
+                <div>
+                  <dt>Gió</dt>
+                  <dd>{env!.wind_speed_kn === null ? "—" : `${env!.wind_speed_kn.toFixed(1)} kn`}</dd>
+                </div>
+                <div>
+                  <dt>Sóng</dt>
+                  <dd>{env!.wave_height_m === null ? "—" : `${env!.wave_height_m.toFixed(1)} m`}</dd>
+                </div>
+                <div>
+                  <dt>Dòng chảy</dt>
+                  <dd>
+                    {env!.current_speed_kn === null
+                      ? "—"
+                      : `${env!.current_speed_kn.toFixed(1)} kn${env!.current_direction_deg === null ? "" : ` @ ${Math.round(env!.current_direction_deg)}°`}`}
+                  </dd>
+                </div>
+                <div>
+                  <dt>Cập nhật thời tiết</dt>
+                  <dd>{formatLocal(env!.weather_fetched_at)}</dd>
+                </div>
+                {hasTide && (
+                  <>
+                    <div>
+                      <dt>Trạm thủy triều</dt>
+                      <dd>
+                        {env!.tide_station_name ?? "—"}
+                        {env!.tide_station_distance_km === null
+                          ? ""
+                          : ` (${env!.tide_station_distance_km.toFixed(0)} km)`}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>Cập nhật thủy triều</dt>
+                      <dd>{formatLocal(env!.tide_fetched_at)}</dd>
+                    </div>
+                  </>
+                )}
+              </dl>
+              {hasTide && (
+                <table className="tide-extremes">
+                  <thead>
+                    <tr>
+                      <th>Con nước</th>
+                      <th>Thời điểm</th>
+                      <th>Mực (m)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(env!.tide_extremes as TideExtreme[]).map((extreme, idx) => (
+                      <tr key={idx}>
+                        <td>{extreme.type === "high" ? "Triều cường" : extreme.type === "low" ? "Triều kiệt" : extreme.type}</td>
+                        <td>{formatLocal(extreme.time)}</td>
+                        <td>{typeof extreme.height === "number" ? extreme.height.toFixed(2) : "—"}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </>
+          );
+        })()}
+      </section>
 
       <section className="eta-history">
         <h3>Lịch sử ETA</h3>
