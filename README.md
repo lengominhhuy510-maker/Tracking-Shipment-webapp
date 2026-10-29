@@ -4,6 +4,12 @@ A post-sales tracking add-on for container freight forwarders that converts reac
 
 [Bản tiếng Việt](README.vi.md) · [Business Analysis](docs/business-analysis.md) · [Architecture](docs/ARCHITECTURE.md) · [Engineering Process](docs/ENGINEERING-PROCESS.md) · [Decisions](docs/decisions/)
 
+## Screenshots
+
+![Shipment list with milestone progress](docs/screenshots/01-list.png)
+
+![Shipment detail with vessel map, ETA and proposal review](docs/screenshots/02-detail.png)
+
 ## The Problem
 
 - Frontline sales representatives monitor 20 to 30 concurrent FCL shipments across four to five fragmented sources, spending 15 to 30 minutes on every customer inquiry.
@@ -14,12 +20,12 @@ A post-sales tracking add-on for container freight forwarders that converts reac
 
 ## What the System Does
 
-- Centralized ocean container tracking into a single view showing live vessel position, voyage milestones, and environmental conditions.
-- Replaced manual carrier website checks with an automated baseline ETA fetch during shipment onboarding.
-- Recomputed arrival ETAs dynamically using live AIS vessel positions, wind speed, surface currents, and port tidal windows.
-- Ingested carrier notice emails to identify vessel rollovers and schedule revisions automatically.
-- Generated reviewable update proposals for staff approval, protecting operational records from untrusted input.
-- Notified cargo owners proactively before estimated arrival variance exceeded acceptable operational thresholds.
+- Centralizes ocean container tracking into a single view showing live vessel position, voyage milestones, and environmental conditions.
+- Replaces manual carrier website checks with an automated baseline ETA fetch during shipment onboarding.
+- Recomputes arrival ETAs dynamically using live AIS vessel positions, wind speed, surface currents, and port tidal windows.
+- Ingests carrier notice emails to identify vessel rollovers and schedule revisions automatically.
+- Generates reviewable update proposals for staff approval, protecting operational records from untrusted input.
+- Notifies cargo owners proactively before estimated arrival variance exceeds acceptable operational thresholds.
 
 ## How It Works
 
@@ -97,7 +103,10 @@ cp .env.devtest2 .env
 # 3. Launch full stack (exposing port 1476 for local OAuth redirects)
 docker compose -f infra/docker-compose.yml -f infra/docker-compose.dev.yml up -d --build
 
-# 4. Open browser at http://localhost:1476
+# 4. Load demo data (4 shipments, 2 users)
+docker compose -f infra/docker-compose.yml exec webapp python -m app.db.seed
+
+# 5. Open browser at http://localhost:1476
 ```
 
 ### Run Tests

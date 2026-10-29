@@ -97,7 +97,10 @@ cp .env.devtest2 .env
 # 3. Khởi chạy toàn bộ 5 dịch vụ (mở port 1476 phục vụ callback OAuth)
 docker compose -f infra/docker-compose.yml -f infra/docker-compose.dev.yml up -d --build
 
-# 4. Truy cập giao diện tại http://localhost:1476
+# 4. Nạp dữ liệu demo (4 lô, 2 người dùng)
+docker compose -f infra/docker-compose.yml exec webapp python -m app.db.seed
+
+# 5. Truy cập giao diện tại http://localhost:1476
 ```
 
 ### Chạy Kiểm Thử
