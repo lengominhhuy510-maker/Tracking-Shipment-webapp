@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="700" viewBox="0 0 1600 700">
+  <defs>
+    <marker id="ar" markerWidth="12" markerHeight="12" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M 0 0 L 9 4 L 0 8 z" fill="#000000"/>
+    </marker>
+    <marker id="arBig" markerWidth="12" markerHeight="12" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M 0 0 L 9 4 L 0 8 z" fill="#000000"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1600" height="700" fill="#ffffff"/>
+
+  <g font-family="'Times New Roman', serif" fill="#000000">
+
+    <!-- ===== Dai ba thoi doan ===== -->
+    <rect x="65" y="30" width="546" height="54" fill="#ffffff" stroke="#000000" stroke-width="1.5"/>
+    <text x="338" y="65" font-size="26" font-weight="bold" text-anchor="middle">trước giao dịch</text>
+
+    <rect x="657" y="30" width="250" height="54" fill="#f0f0f0" stroke="#000000" stroke-width="1.5"/>
+    <text x="782" y="65" font-size="26" font-weight="bold" text-anchor="middle">trong giao dịch</text>
+
+    <rect x="953" y="30" width="546" height="54" fill="#c9c9c9" stroke="#000000" stroke-width="3"/>
+    <text x="1226" y="65" font-size="26" font-weight="bold" text-anchor="middle">sau giao dịch</text>
+
+    <!-- Ranh gioi ba thoi doan -->
+    <line x1="634" y1="20" x2="634" y2="320" stroke="#000000" stroke-width="2" stroke-dasharray="9,7"/>
+    <line x1="930" y1="20" x2="930" y2="320" stroke="#000000" stroke-width="2" stroke-dasharray="9,7"/>
+
+    <!-- ===== Nam chang noi tiep ===== -->
+    <!-- (1) -->
+    <rect x="65" y="150" width="250" height="140" fill="#ffffff" stroke="#000000" stroke-width="1.5"/>
+    <text x="190" y="186" font-size="24" font-weight="bold" text-anchor="middle">(1)</text>
+    <text x="190" y="228" font-size="22" text-anchor="middle">tiếp cận và tư vấn</text>
+    <text x="190" y="258" font-size="22" text-anchor="middle">giải pháp</text>
+
+    <!-- (2) -->
+    <rect x="361" y="150" width="250" height="140" fill="#ffffff" stroke="#000000" stroke-width="1.5"/>
+    <text x="486" y="186" font-size="24" font-weight="bold" text-anchor="middle">(2)</text>
+    <text x="486" y="228" font-size="22" text-anchor="middle">báo giá và ký</text>
+    <text x="486" y="258" font-size="22" text-anchor="middle">hợp đồng</text>
+
+    <!-- (3) -->
+    <rect x="657" y="150" width="250" height="140" fill="#f0f0f0" stroke="#000000" stroke-width="1.5"/>
+    <text x="782" y="186" font-size="24" font-weight="bold" text-anchor="middle">(3)</text>
+    <text x="782" y="228" font-size="22" text-anchor="middle">đặt chỗ, gom chứng</text>
+    <text x="782" y="258" font-size="22" text-anchor="middle">từ và khởi hành</text>
+
+    <!-- (4) - to dam -->
+    <rect x="953" y="150" width="250" height="140" fill="#c9c9c9" stroke="#000000" stroke-width="3"/>
+    <text x="1078" y="186" font-size="24" font-weight="bold" text-anchor="middle">(4)</text>
+    <text x="1078" y="228" font-size="22" font-weight="bold" text-anchor="middle">hàng trên đường</text>
+    <text x="1078" y="258" font-size="22" font-weight="bold" text-anchor="middle">vận chuyển</text>
+
+    <!-- (5) - to dam -->
+    <rect x="1249" y="150" width="250" height="140" fill="#c9c9c9" stroke="#000000" stroke-width="3"/>
+    <text x="1374" y="186" font-size="24" font-weight="bold" text-anchor="middle">(5)</text>
+    <text x="1374" y="228" font-size="22" font-weight="bold" text-anchor="middle">cập cảng, thông</text>
+    <text x="1374" y="258" font-size="22" font-weight="bold" text-anchor="middle">quan và giao hàng</text>
+
+    <!-- Mui ten noi tiep giua cac chang -->
+    <line x1="317" y1="220" x2="355" y2="220" stroke="#000000" stroke-width="2" marker-end="url(#ar)"/>
+    <line x1="613" y1="220" x2="651" y2="220" stroke="#000000" stroke-width="2" marker-end="url(#ar)"/>
+    <line x1="909" y1="220" x2="947" y2="220" stroke="#000000" stroke-width="2" marker-end="url(#ar)"/>
+    <line x1="1205" y1="220" x2="1243" y2="220" stroke="#000000" stroke-width="2" marker-end="url(#ar)"/>
+
+    <!-- ===== Dau moc vung tu van sau ban ===== -->
+    <path d="M 953 306 L 953 322 L 1499 322 L 1499 306" fill="none" stroke="#000000" stroke-width="2.5"/>
+    <line x1="1226" y1="322" x2="1226" y2="348" stroke="#000000" stroke-width="2.5"/>
+
+    <rect x="953" y="348" width="546" height="200" fill="#ebebeb" stroke="#000000" stroke-width="2.5"/>
+    <text x="1226" y="384" font-size="24" font-weight="bold" text-anchor="middle">Vùng hoạt động tư vấn sau bán</text>
+    <line x1="985" y1="400" x2="1467" y2="400" stroke="#000000" stroke-width="1"/>
+    <text x="990" y="440" font-size="22">–  theo dõi hàng hoá</text>
+    <text x="990" y="479" font-size="22">–  cung cấp thông tin về lô hàng</text>
+    <text x="990" y="518" font-size="22">–  tiếp nhận và xử lý khiếu nại</text>
+
+    <!-- ===== Vong lap tai ky hop dong: chang (5) -> chang (1) ===== -->
+    <path d="M 1499 250 L 1552 250 L 1552 630 L 190 630 L 190 298"
+          fill="none" stroke="#000000" stroke-width="2.5" stroke-dasharray="12,8"
+          stroke-linejoin="miter" marker-end="url(#arBig)"/>
+    <text x="700" y="666" font-size="24" font-style="italic" text-anchor="middle">chu kỳ tái ký hợp đồng</text>
+
+  </g>
+</svg>

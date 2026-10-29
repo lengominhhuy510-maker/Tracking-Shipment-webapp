@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Wireframe màn hình tra cứu kho tri thức</title>
+  <desc id="desc">Wireframe doanh nghiệp đen trắng gồm thanh tìm kiếm và bộ lọc, danh sách bốn kết quả bên trái, khung chi tiết sáu trường bên phải và nút ghi tình huống mới.</desc>
+  <style>
+    text { font-family: Arial, "DejaVu Sans", sans-serif; fill: #111111; }
+    .screen { fill: #ffffff; stroke: #111111; stroke-width: 2.5; }
+    .header { fill: #e2e2e2; stroke: #111111; stroke-width: 2; }
+    .field { fill: #ffffff; stroke: #555555; stroke-width: 1.5; }
+    .panel { fill: #ffffff; stroke: #111111; stroke-width: 2; }
+    .row { fill: #f2f2f2; stroke: #555555; stroke-width: 1.25; }
+    .row-selected { fill: #e2e2e2; stroke: #111111; stroke-width: 2; }
+    .detail { fill: #f2f2f2; stroke: #555555; stroke-width: 1.25; }
+    .button { fill: #111111; stroke: #111111; stroke-width: 2; }
+    .screen-title { font-size: 24px; font-weight: 700; letter-spacing: .2px; }
+    .panel-title { font-size: 20px; font-weight: 700; }
+    .label { font-size: 17px; font-weight: 700; }
+    .value { font-size: 16px; font-weight: 500; fill: #555555; }
+    .result-title { font-size: 17px; font-weight: 700; }
+    .result-sub { font-size: 15px; font-weight: 500; fill: #555555; }
+    .button-text { font-size: 18px; font-weight: 700; fill: #ffffff; }
+  </style>
+
+  <rect width="1600" height="1000" fill="#ffffff"/>
+  <rect class="screen" x="35" y="35" width="1530" height="930" rx="2"/>
+
+  <!-- Header chung -->
+  <rect class="header" x="35" y="35" width="1530" height="70" rx="2"/>
+  <text class="screen-title" x="70" y="79">KHO TRI THỨC XỬ LÝ TÌNH HUỐNG</text>
+
+  <!-- Hàng tìm kiếm và bộ lọc -->
+  <rect class="field" x="70" y="140" width="790" height="76" rx="2"/>
+  <text class="label" x="96" y="186">Tìm theo từ khoá</text>
+  <text class="value" x="820" y="186" text-anchor="end">Nhập nội dung cần tra cứu</text>
+
+  <rect class="field" x="885" y="140" width="350" height="76" rx="2"/>
+  <text class="label" x="910" y="172">Loại tình huống</text>
+  <text class="value" x="910" y="199">Tất cả</text>
+  <path d="M1201 171 l10 10 10-10" fill="none" stroke="#555555" stroke-width="2"/>
+
+  <rect class="field" x="1260" y="140" width="270" height="76" rx="2"/>
+  <text class="label" x="1285" y="172">Tuyến</text>
+  <text class="value" x="1285" y="199">Tất cả</text>
+  <path d="M1496 171 l10 10 10-10" fill="none" stroke="#555555" stroke-width="2"/>
+
+  <!-- Cột trái: danh sách kết quả -->
+  <rect class="panel" x="70" y="250" width="480" height="665" rx="2"/>
+  <rect class="header" x="70" y="250" width="480" height="58" rx="2"/>
+  <text class="panel-title" x="95" y="287">KẾT QUẢ TRA CỨU</text>
+
+  <rect class="row-selected" x="90" y="330" width="440" height="120" rx="2"/>
+  <text class="result-title" x="115" y="374">Tình huống: Điều chỉnh lịch giao nhận</text>
+  <text class="result-sub" x="115" y="410">Loại tình huống: Biến động lịch trình</text>
+
+  <rect class="row" x="90" y="468" width="440" height="120" rx="2"/>
+  <text class="result-title" x="115" y="512">Tình huống: Xử lý thay đổi hành trình</text>
+  <text class="result-sub" x="115" y="548">Loại tình huống: Thay đổi vận chuyển</text>
+
+  <rect class="row" x="90" y="606" width="440" height="120" rx="2"/>
+  <text class="result-title" x="115" y="650">Tình huống: Phối hợp thông báo khách hàng</text>
+  <text class="result-sub" x="115" y="686">Loại tình huống: Trao đổi thông tin</text>
+
+  <rect class="row" x="90" y="744" width="440" height="120" rx="2"/>
+  <text class="result-title" x="115" y="788">Tình huống: Rà soát phương án xử lý</text>
+  <text class="result-sub" x="115" y="824">Loại tình huống: Hỗ trợ ra quyết định</text>
+
+  <!-- Cột phải: chi tiết -->
+  <rect class="panel" x="585" y="250" width="945" height="665" rx="2"/>
+  <rect class="header" x="585" y="250" width="945" height="58" rx="2"/>
+  <text class="panel-title" x="610" y="287">CHI TIẾT TÌNH HUỐNG</text>
+
+  <rect class="detail" x="610" y="330" width="895" height="72" rx="2"/>
+  <text class="label" x="635" y="359">Tình huống</text>
+  <text class="value" x="635" y="386">Nội dung mô tả tình huống đã được ghi nhận</text>
+
+  <rect class="detail" x="610" y="416" width="895" height="72" rx="2"/>
+  <text class="label" x="635" y="445">Bối cảnh</text>
+  <text class="value" x="635" y="472">Thông tin tuyến, hãng tàu, cảng dỡ và thời điểm</text>
+
+  <rect class="detail" x="610" y="502" width="895" height="72" rx="2"/>
+  <text class="label" x="635" y="531">Nguyên nhân</text>
+  <text class="value" x="635" y="558">Nội dung nguyên nhân đã được xác định</text>
+
+  <rect class="detail" x="610" y="588" width="895" height="72" rx="2"/>
+  <text class="label" x="635" y="617">Phương án đã chọn</text>
+  <text class="value" x="635" y="644">Cách xử lý và nội dung đã thông báo cho khách hàng</text>
+
+  <rect class="detail" x="610" y="674" width="895" height="72" rx="2"/>
+  <text class="label" x="635" y="703">Kết quả</text>
+  <text class="value" x="635" y="730">Kết quả xử lý được ghi nhận ở mức mô tả</text>
+
+  <rect class="detail" x="610" y="760" width="895" height="72" rx="2"/>
+  <text class="label" x="635" y="789">Ghi chú thao tác</text>
+  <text class="value" x="635" y="816">Kinh nghiệm tra cứu rút ra từ tình huống</text>
+
+  <rect class="button" x="1200" y="850" width="305" height="50" rx="2"/>
+  <text class="button-text" x="1352" y="882" text-anchor="middle">Ghi lại tình huống mới</text>
+</svg>

@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="2250" height="3272" viewBox="-75 0 2250 3272">
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#111111"/>
+    </marker>
+    <style>
+      .txt { font-family: "Times New Roman", serif; fill: #111111; }
+      .lane-title { font-size: 29px; font-weight: bold; }
+      .step-title { font-size: 30px; font-weight: bold; }
+      .body { font-size: 25px; }
+      .small { font-size: 22px; }
+      .flow { fill: none; stroke: #111111; stroke-width: 3.2; marker-end: url(#arrow); }
+      .link { fill: none; stroke: #111111; stroke-width: 3.2; }
+      .info { fill: none; stroke: #111111; stroke-width: 2.5; stroke-dasharray: 11 8; marker-end: url(#arrow); }
+      .box { fill: #ffffff; stroke: #111111; stroke-width: 2.4; }
+      .step { fill: #e3e3e3; stroke: #111111; stroke-width: 3.2; }
+      .decision { fill: #f2f2f2; stroke: #111111; stroke-width: 2.8; }
+      .io { fill: #ffffff; stroke: #111111; stroke-width: 2.4; }
+      .pp { fill: #555555; stroke: #111111; stroke-width: 2.5; }
+      .pptext { font-family: "Times New Roman", serif; fill: #ffffff; font-size: 19px; font-weight: bold; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <rect x="-75" y="0" width="2250" height="3272" fill="#ffffff"/>
+
+  <!-- Ba lan chu the -->
+  <rect x="65" y="45" width="620" height="3180" fill="#fafafa" stroke="#111111" stroke-width="2.5"/>
+  <rect x="685" y="45" width="650" height="3180" fill="#f1f1f1" stroke="#111111" stroke-width="2.5"/>
+  <rect x="1335" y="45" width="700" height="3180" fill="#fafafa" stroke="#111111" stroke-width="2.5"/>
+  <rect x="65" y="45" width="620" height="125" fill="#d5d5d5" stroke="#111111" stroke-width="2.5"/>
+  <rect x="685" y="45" width="650" height="125" fill="#c9c9c9" stroke="#111111" stroke-width="2.5"/>
+  <rect x="1335" y="45" width="700" height="125" fill="#d5d5d5" stroke="#111111" stroke-width="2.5"/>
+  <g class="txt lane-title" text-anchor="middle">
+    <text x="375" y="88"><tspan x="375">Nhân viên Sales</tspan><tspan x="375" dy="36">(Sale Log / Sale Fwd)</tspan></text>
+    <text x="1010" y="115">CSKH và Giao nhận</text>
+    <text x="1685" y="78"><tspan x="1685">Bên ngoài: khách hàng, hãng tàu,</tspan><tspan x="1685" dy="34">đại lý nước ngoài, cơ quan hải quan</tspan></text>
+  </g>
+
+  <!-- Bước 1 -->
+  <rect class="step" x="155" y="205" width="440" height="150" rx="4"/>
+  <g class="txt" text-anchor="middle">
+    <text class="step-title" x="375" y="245">BƯỚC 1</text>
+    <text class="body" x="375" y="280"><tspan x="375">Khởi tạo hồ sơ lô hàng và</tspan><tspan x="375" dy="31">chuyển giao sang vận hành</tspan></text>
+    <text class="small" x="375" y="342">CRM • TMS • bảng tính chung</text>
+  </g>
+
+  <!-- Bước 2: dữ liệu vào/ra qua làn 3 -->
+  <path class="flow" d="M375,355 V405"/>
+  <polygon class="io" points="1435,385 1960,385 1925,485 1400,485"/>
+  <g class="txt body" text-anchor="middle">
+    <text x="1680" y="420"><tspan x="1680">Hãng tàu / đại lý nước ngoài:</tspan><tspan x="1680" dy="31">xác nhận đặt chỗ, tên tàu, số chuyến, lịch dự kiến</tspan></text>
+  </g>
+  <rect class="step" x="125" y="410" width="510" height="165" rx="4"/>
+  <g class="txt" text-anchor="middle">
+    <text class="step-title" x="380" y="450">BƯỚC 2</text>
+    <text class="body" x="380" y="485"><tspan x="380">Nhận xác nhận đặt chỗ và thông báo</tspan><tspan x="380" dy="31">lịch tàu lần đầu cho khách hàng</tspan></text>
+    <text class="small" x="380" y="558">Email • TMS • bảng tính</text>
+  </g>
+  <path class="info" d="M1400,435 H650"/>
+  <polygon class="io" points="1435,515 1960,515 1925,625 1400,625"/>
+  <text class="txt body" x="1680" y="545" text-anchor="middle"><tspan x="1680">Khách hàng: lịch tàu lần đầu,</tspan><tspan x="1680" dy="30">thời gian dự kiến rời cảng xếp</tspan><tspan x="1680" dy="30">và ETA cảng dỡ</tspan></text>
+  <path class="info" d="M635,535 H1400"/>
+
+  <!-- Bước 3: hai nhánh song song và hợp -->
+  <path class="flow" d="M380,575 V675 H700"/>
+  <rect class="step" x="700" y="630" width="620" height="125" rx="4"/>
+  <g class="txt" text-anchor="middle">
+    <text class="step-title" x="1010" y="670">BƯỚC 3</text>
+    <text class="body" x="1010" y="705">Theo dõi lô hàng trong hành trình</text>
+    <text class="small" x="1010" y="740">Sales / CSKH / Giao nhận</text>
+  </g>
+  <path class="flow" d="M1010,755 V785 H365 V805"/>
+  <path class="link" d="M1010,785 H1005"/>
+  <path class="flow" d="M1005,785 V805"/>
+  <rect class="box" x="130" y="805" width="470" height="110" rx="4"/>
+  <text class="txt body" x="365" y="845" text-anchor="middle"><tspan x="365">Nhánh a: tra cổng hãng tàu</tspan><tspan x="365" dy="31">theo số B/L hoặc số container</tspan></text>
+  <rect class="box" x="750" y="805" width="480" height="110" rx="4"/>
+  <text class="txt body" x="990" y="845" text-anchor="middle"><tspan x="990">Nhánh b: tra các trang</tspan><tspan x="990" dy="31">theo dõi tàu công khai</tspan></text>
+  <path class="link" d="M365,915 V950 H690"/>
+  <path class="link" d="M990,915 V950 H690"/>
+  <circle cx="690" cy="950" r="8" fill="#111111"/>
+  <path class="flow" d="M690,958 V975"/>
+  <rect class="box" x="390" y="975" width="600" height="85" rx="4"/>
+  <text class="txt body" x="690" y="1028" text-anchor="middle">Ghi kết quả vào bảng tính theo dõi chung</text>
+  <!-- PP-2 phủ cả hai nhánh -->
+  <path class="pp" d="M1288,828 L1340,920 L1236,920 Z"/>
+  <text class="pptext" x="1288" y="891">PP-2</text>
+
+  <!-- Bước 4 -->
+  <path class="flow" d="M690,1060 V1100 H375"/>
+  <rect class="step" x="125" y="1100" width="500" height="145" rx="4"/>
+  <g class="txt" text-anchor="middle">
+    <text class="step-title" x="375" y="1142">BƯỚC 4</text>
+    <text class="body" x="375" y="1180">Cập nhật tiến độ cho khách hàng</text>
+    <text class="small" x="375" y="1220">Email • nhóm chat riêng của khách hàng</text>
+  </g>
+  <polygon class="io" points="1460,1110 1955,1110 1920,1215 1425,1215"/>
+  <text class="txt body" x="1690" y="1153" text-anchor="middle"><tspan x="1690">Khách hàng nhận</tspan><tspan x="1690" dy="31">cập nhật tiến độ</tspan></text>
+  <path class="info" d="M625,1172 H1425"/>
+
+  <!-- PP-1 ở ranh giới bước 4 và 5 -->
+  <path class="pp" d="M646,1218 L700,1310 L592,1310 Z"/>
+  <text class="pptext" x="646" y="1280">PP-1</text>
+
+  <!-- Bước 5: đầu vào, hình thoi, nhánh Có/Chưa và đường quay ngược -->
+  <path class="flow" d="M375,1245 V1315"/>
+  <polygon class="io" points="1470,1280 1955,1280 1920,1375 1435,1375"/>
+  <text class="txt body" x="1695" y="1320" text-anchor="middle"><tspan x="1695">Khách hàng gửi</tspan><tspan x="1695" dy="31">câu hỏi phát sinh</tspan></text>
+  <rect class="step" x="115" y="1315" width="530" height="125" rx="4"/>
+  <g class="txt" text-anchor="middle">
+    <text class="step-title" x="380" y="1357">BƯỚC 5</text>
+    <text class="body" x="380" y="1394"><tspan x="380">Tiếp nhận và trả lời yêu cầu</tspan><tspan x="380" dy="31">phát sinh của khách hàng</tspan></text>
+  </g>
+  <path class="info" d="M1435,1330 H645"/>
+  <path class="flow" d="M380,1440 V1472"/>
+  <polygon class="decision" points="380,1472 590,1562 380,1652 170,1562"/>
+  <text class="txt body" x="380" y="1545" text-anchor="middle"><tspan x="380">Nhân viên đã có sẵn</tspan><tspan x="380" dy="31">thông tin chưa?</tspan></text>
+
+  <!-- Nhánh Có tới ô trả lời -->
+  <path class="flow" d="M280,1605 H145 V1740 H205"/>
+  <text class="txt small" x="160" y="1665">Có</text>
+  <rect class="box" x="205" y="1690" width="430" height="100" rx="4"/>
+  <text class="txt body" x="420" y="1730" text-anchor="middle"><tspan x="420">Trả lời khách hàng</tspan><tspan x="420" dy="31">qua kênh liên lạc</tspan></text>
+  <path class="info" d="M635,1740 H1435"/>
+  <text class="txt small" x="1345" y="1723">phản hồi</text>
+
+  <!-- Nhánh Chưa: chuyển câu hỏi, chờ làn 3, quay ngược về ô trả lời -->
+  <path class="flow" d="M590,1562 H735"/>
+  <text class="txt small" x="620" y="1545">Chưa</text>
+  <rect class="box" x="735" y="1505" width="550" height="115" rx="4"/>
+  <text class="txt body" x="1010" y="1545" text-anchor="middle"><tspan x="1010">Chuyển câu hỏi sang nhóm Giao nhận</tspan><tspan x="1010" dy="31">hoặc gửi thư hỏi hãng tàu</tspan></text>
+  <path class="pp" d="M1298,1515 L1348,1605 L1248,1605 Z"/>
+  <text class="pptext" x="1298" y="1578">PP-2</text>
+  <path class="flow" d="M1285,1562 H1435"/>
+  <polygon class="io" points="1465,1505 1955,1505 1920,1620 1430,1620"/>
+  <text class="txt body" x="1692" y="1545" text-anchor="middle"><tspan x="1692">Chờ phản hồi từ làn 3:</tspan><tspan x="1692" dy="31">hãng tàu / bên liên quan</tspan></text>
+  <path class="pp" d="M1960,1515 L2010,1605 L1910,1605 Z"/>
+  <text class="pptext" x="1960" y="1578">PP-3</text>
+  <!-- Đường quay ngược rõ ràng -->
+  <path class="flow" d="M1692,1620 V1840 H420 V1790"/>
+  <text class="txt small" x="1010" y="1823" text-anchor="middle">đường quay ngược sau khi nhận phản hồi</text>
+
+  <!-- Bước 6 -->
+  <path class="flow" d="M420,1840 V1880 H790"/>
+  <polygon class="io" points="1470,1845 1955,1845 1920,1940 1435,1940"/>
+  <text class="txt body" x="1695" y="1885" text-anchor="middle"><tspan x="1695">Hãng tàu phát</tspan><tspan x="1695" dy="31">thông báo hàng đến</tspan></text>
+  <rect class="step" x="755" y="1880" width="550" height="115" rx="4"/>
+  <g class="txt" text-anchor="middle">
+    <text class="step-title" x="1030" y="1922">BƯỚC 6</text>
+    <text class="body" x="1030" y="1960">Phối hợp xử lý khi lô hàng cập cảng đích</text>
+  </g>
+  <path class="info" d="M1435,1893 H1305"/>
+
+  <!-- Ba nhóm nghiệp vụ chuyên trách, xếp dọc trong làn 2 -->
+  <rect class="box" x="760" y="2030" width="480" height="85" rx="4"/>
+  <text class="txt body" x="1000" y="2080" text-anchor="middle">Nhóm chứng từ: lấy D/O</text>
+  <rect class="box" x="760" y="2155" width="480" height="90" rx="4"/>
+  <text class="txt body" x="1000" y="2190" text-anchor="middle"><tspan x="1000">Nhóm thủ tục hải quan:</tspan><tspan x="1000" dy="31">khai báo và thông quan</tspan></text>
+  <path class="flow" d="M1030,1995 V2030"/>
+  <path class="flow" d="M1000,2115 V2155"/>
+
+  <!-- Nhánh phụ kiểm hoá rẽ ra rồi nhập lại dòng chính -->
+  <path class="flow" d="M1000,2245 V2280"/>
+  <polygon class="decision" points="1000,2280 1150,2350 1000,2420 850,2350"/>
+  <text class="txt small" x="1000" y="2340" text-anchor="middle"><tspan x="1000">Hải quan yêu cầu</tspan><tspan x="1000" dy="27">kiểm hoá?</tspan></text>
+  <rect class="box" x="1450" y="2300" width="450" height="100" rx="4"/>
+  <text class="txt body" x="1675" y="2340" text-anchor="middle"><tspan x="1675">Cơ quan hải quan</tspan><tspan x="1675" dy="31">thực hiện kiểm hoá</tspan></text>
+  <path class="flow" d="M1150,2350 H1450"/>
+  <text class="txt small" x="1180" y="2333">Có</text>
+  <path class="flow" d="M1000,2420 V2480"/>
+  <text class="txt small" x="1015" y="2455">Không</text>
+  <rect class="box" x="760" y="2480" width="480" height="90" rx="4"/>
+  <text class="txt body" x="1000" y="2515" text-anchor="middle"><tspan x="1000">Nhóm Giao nhận: sắp xếp phương tiện</tspan><tspan x="1000" dy="31">lấy hàng khỏi cảng</tspan></text>
+  <path class="flow" d="M1675,2400 V2525 H1240"/>
+  <text class="txt small" x="1290" y="2508">nhập lại dòng chính</text>
+
+  <!-- Sales là cầu nối thông tin: làn 2 sang làn 1 rồi sang làn 3 -->
+  <polygon class="io" points="180,2030 600,2030 570,2130 150,2130"/>
+  <text class="txt body" x="375" y="2069" text-anchor="middle"><tspan x="375">Sales: cầu nối</tspan><tspan x="375" dy="31">thông tin</tspan></text>
+  <path class="info" d="M760,2072 H600"/>
+  <path class="info" d="M240,2130 V2630 H1420"/>
+  <polygon class="io" points="1480,2580 1930,2580 1900,2680 1450,2680"/>
+  <text class="txt body" x="1690" y="2640" text-anchor="middle">Thông tin tới khách hàng</text>
+
+  <!-- Bước 7 -->
+  <path class="flow" d="M1000,2570 V2600 H600 V2710"/>
+  <rect class="step" x="130" y="2710" width="600" height="140" rx="4"/>
+  <g class="txt" text-anchor="middle">
+    <text class="step-title" x="430" y="2750">BƯỚC 7</text>
+    <text class="body" x="430" y="2787"><tspan x="430">Xác nhận hoàn tất giao hàng</tspan><tspan x="430" dy="31">và thu nhận phản hồi</tspan></text>
+    <text class="small" x="430" y="2838">Ghi CRM • trao đổi trong nhóm chat nội bộ</text>
+  </g>
+  <polygon class="io" points="1450,2720 1935,2720 1905,2825 1420,2825"/>
+  <text class="txt body" x="1680" y="2761" text-anchor="middle"><tspan x="1680">Phản hồi</tspan><tspan x="1680" dy="31">của khách hàng</tspan></text>
+  <path class="info" d="M1420,2772 H730"/>
+  <path class="pp" d="M745,2725 L795,2815 L695,2815 Z"/>
+  <text class="pptext" x="745" y="2788">PP-4</text>
+
+  <!-- Bước 8 -->
+  <path class="flow" d="M430,2850 V2885"/>
+  <rect class="step" x="110" y="2885" width="640" height="145" rx="4"/>
+  <g class="txt" text-anchor="middle">
+    <text class="step-title" x="430" y="2925">BƯỚC 8</text>
+    <text class="body" x="430" y="2962">Đóng hồ sơ, lưu trữ và tổng hợp dữ liệu lô hàng</text>
+    <text class="small" x="430" y="2998"><tspan x="430">Bàn giao chứng từ • lưu hồ sơ • kết thúc trên TMS</tspan><tspan x="430" dy="27">và bảng tính</tspan></text>
+  </g>
+  <path class="pp" d="M765,2900 L815,2990 L715,2990 Z"/>
+  <text class="pptext" x="765" y="2963">PP-4</text>
+
+  <!-- Chú giải điểm nghẽn ở góc dưới bên phải -->
+  <rect x="1000" y="2880" width="985" height="310" fill="#ffffff" stroke="#111111" stroke-width="2.8"/>
+  <text class="txt step-title" x="1030" y="2922">CHÚ GIẢI ĐIỂM NGHẼN</text>
+  <g class="txt body">
+    <path class="pp" d="M1063,2943 L1100,3007 L1026,3007 Z"/><text class="pptext" x="1063" y="2996" font-size="17">PP-1</text>
+    <text x="1125" y="2998"><tspan font-weight="bold">PP-1</tspan><tspan> — Bị động, đợi khách hỏi</tspan></text>
+    <path class="pp" d="M1063,3003 L1100,3067 L1026,3067 Z"/><text class="pptext" x="1063" y="3056" font-size="17">PP-2</text>
+    <text x="1125" y="3058"><tspan font-weight="bold">PP-2</tspan><tspan> — Tra cứu thủ công phân tán</tspan></text>
+    <path class="pp" d="M1063,3063 L1100,3127 L1026,3127 Z"/><text class="pptext" x="1063" y="3116" font-size="17">PP-3</text>
+    <text x="1125" y="3118"><tspan font-weight="bold">PP-3</tspan><tspan> — Trễ phát hiện và trễ phản hồi</tspan></text>
+    <path class="pp" d="M1063,3123 L1100,3187 L1026,3187 Z"/><text class="pptext" x="1063" y="3176" font-size="17">PP-4</text>
+    <text x="1125" y="3178"><tspan font-weight="bold">PP-4</tspan><tspan> — Tri thức không được lưu</tspan></text>
+  </g>
+</svg>

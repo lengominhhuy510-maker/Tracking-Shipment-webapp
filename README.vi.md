@@ -4,6 +4,14 @@ Lớp ứng dụng theo dõi sau bán hàng dành cho công ty giao nhận vận
 
 > Bản tiếng Việt. [English version](README.md) · [Phân Tích Nghiệp Vụ](docs/business-analysis.md) · [Kiến Trúc](docs/ARCHITECTURE.md) · [Quy Trình Kỹ Thuật](docs/ENGINEERING-PROCESS.md) · [Quyết Định Kiến Trúc](docs/decisions/)
 
+## Hình Ảnh Giao Diện
+
+| Hành trình khách hàng | Kiến trúc hệ thống |
+|---|---|
+| <img src="docs/screenshots/process-customer-journey.png" width="420" alt="Hành trình khách hàng của lô hàng FCL"> | <img src="docs/screenshots/architecture-layers.svg" width="420" alt="Kiến trúc tổng quan hệ thống"> |
+
+[![Xem giao diện hệ thống](https://img.shields.io/badge/%E2%96%B6_Xem_giao_di%E1%BB%87n_h%E1%BB%87_th%E1%BB%91ng-2563EB?style=for-the-badge)](docs/GALLERY.md)
+
 ## Vấn Đề Nghiệp Vụ
 
 - Nhân viên kinh doanh theo dõi đồng thời 20 đến 30 lô hàng FCL trên bốn đến năm nguồn rời rạc, tốn 15 đến 30 phút cho mỗi lần khách hàng hỏi thông tin.
@@ -115,6 +123,7 @@ cd frontend && npm test
 
 ## Tài Liệu Tham Chiếu
 
+- [Toàn Bộ Hệ Thống Qua Hình Ảnh](docs/GALLERY.md) — kiến trúc, phân tích quy trình và toàn bộ màn hình ứng dụng.
 - [Phân Tích Nghiệp Vụ Chi Tiết](docs/business-analysis.md) — nghiên cứu quy trình thực tế, bảng đo thời gian và chi phí cơ sở.
 - [Tổng Quan Kiến Trúc](docs/ARCHITECTURE.md) — cấu trúc 4 tầng, ranh giới thành phần và luồng dữ liệu.
 - [Đặc Tả Kỹ Thuật](Spec_Demo_GiamSatLoHang-v0_9_19.md) — bản đặc tả chức năng đầy đủ bằng tiếng Việt.

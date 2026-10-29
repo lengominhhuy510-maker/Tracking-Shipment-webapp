@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Kiến trúc tổng quan hệ thống hỗ trợ</title>
+  <desc id="desc">Sơ đồ khối chức năng gồm nguồn dữ liệu bên ngoài, ba module của lớp hỗ trợ, nhân viên Sales, khách hàng và hệ thống nghiệp vụ hiện có.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#111111"/>
+    </marker>
+    <style>
+      text { font-family: Arial, "DejaVu Sans", sans-serif; fill: #111111; }
+      .region { font-size: 22px; font-weight: 700; letter-spacing: .2px; }
+      .box-title { font-size: 20px; font-weight: 700; }
+      .box-text { font-size: 18px; font-weight: 600; }
+      .label { font-size: 15px; font-weight: 600; }
+      .small { font-size: 14px; font-weight: 600; }
+      .frame { fill: #ffffff; stroke: #555555; stroke-width: 2; stroke-dasharray: 10 8; }
+      .box { fill: #f2f2f2; stroke: #111111; stroke-width: 2; }
+      .box-alt { fill: #e2e2e2; stroke: #111111; stroke-width: 2; }
+      .outside { fill: #ffffff; stroke: #555555; stroke-width: 1.25; }
+      .flow { fill: none; stroke: #111111; stroke-width: 2.5; marker-end: url(#arrow); }
+      .relation { fill: none; stroke: #555555; stroke-width: 1.25; stroke-dasharray: 9 7; }
+      .relation-arrow { fill: none; stroke: #111111; stroke-width: 1.5; stroke-dasharray: 9 7; marker-start: url(#arrow); marker-end: url(#arrow); }
+      .external-flow { fill: none; stroke: #111111; stroke-width: 2; marker-end: url(#arrow); }
+      .customer-flow { fill: none; stroke: #111111; stroke-width: 3; marker-end: url(#arrow); }
+      .label-bg { fill: #ffffff; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="1000" fill="#ffffff"/>
+
+  <!-- Cột 1: nguồn dữ liệu bên ngoài -->
+  <text class="region" x="195" y="70" text-anchor="middle">Nguồn dữ liệu bên ngoài</text>
+  <rect class="box" x="40" y="125" width="310" height="130" rx="2"/>
+  <text class="box-text" x="195" y="170" text-anchor="middle">
+    <tspan x="195">Các cổng tra cứu trực tuyến</tspan>
+    <tspan x="195" dy="27">của hãng tàu</tspan>
+  </text>
+  <rect class="box" x="40" y="375" width="310" height="130" rx="2"/>
+  <text class="box-text" x="195" y="425" text-anchor="middle">
+    <tspan x="195">Các trang theo dõi tàu</tspan>
+    <tspan x="195" dy="27">công khai</tspan>
+  </text>
+  <rect class="box" x="40" y="625" width="310" height="145" rx="2"/>
+  <text class="box-text" x="195" y="670" text-anchor="middle">
+    <tspan x="195">Thư điện tử và các nhóm chat</tspan>
+    <tspan x="195" dy="27">trên ứng dụng nhắn tin</tspan>
+  </text>
+
+  <!-- Cột 2: lớp hỗ trợ -->
+  <rect class="frame" x="450" y="55" width="520" height="735" rx="2"/>
+  <rect x="475" y="38" width="370" height="38" fill="#ffffff"/>
+  <text class="region" x="660" y="66" text-anchor="middle">Hệ thống hỗ trợ (lớp bổ sung)</text>
+
+  <rect class="box-alt" x="525" y="125" width="370" height="130" rx="2"/>
+  <text class="box-title" x="710" y="198" text-anchor="middle">Module 1 — Giám sát lô hàng</text>
+  <rect class="box-alt" x="525" y="375" width="370" height="130" rx="2"/>
+  <text class="box-title" x="710" y="448" text-anchor="middle">Module 2 — Hỗ trợ ra quyết định</text>
+  <rect class="box-alt" x="525" y="625" width="370" height="130" rx="2"/>
+  <text class="box-title" x="710" y="698" text-anchor="middle">Module 3 — Quản trị tri thức</text>
+
+  <!-- Nguồn vào Module 1 -->
+  <path class="external-flow" d="M350 190 H525"/>
+  <path class="external-flow" d="M350 440 H405 V215 H525"/>
+  <path class="external-flow" d="M350 698 H390 V235 H525"/>
+
+  <!-- Luồng dọc giữa các module -->
+  <path class="flow" d="M710 255 V375"/>
+  <rect class="label-bg" x="537" y="292" width="346" height="44"/>
+  <text class="small" x="710" y="310" text-anchor="middle">
+    <tspan x="710">trạng thái lô hàng và</tspan>
+    <tspan x="710" dy="18">cảnh báo lệch ETA</tspan>
+  </text>
+
+  <path class="flow" d="M710 505 V625"/>
+  <rect class="label-bg" x="520" y="540" width="380" height="44"/>
+  <text class="small" x="710" y="558" text-anchor="middle">
+    <tspan x="710">ghi lại tình huống và</tspan>
+    <tspan x="710" dy="18">phương án đã chọn</tspan>
+  </text>
+
+  <!-- Cột 3: nhân viên Sales -->
+  <text class="region" x="1170" y="70" text-anchor="middle">Người dùng trực tiếp</text>
+  <rect class="box" x="1060" y="330" width="260" height="220" rx="2"/>
+  <text class="box-title" x="1190" y="420" text-anchor="middle">
+    <tspan x="1190">Nhân viên Sales</tspan>
+    <tspan x="1190" dy="30">(bộ phận Kinh doanh)</tspan>
+  </text>
+
+  <!-- Module tới Sales, routing riêng -->
+  <path class="flow" d="M895 190 H1005 V370 H1060"/>
+  <rect class="label-bg" x="905" y="145" width="190" height="42"/>
+  <text class="small" x="1000" y="163" text-anchor="middle">
+    <tspan x="1000">thông tin hành trình</tspan>
+    <tspan x="1000" dy="18">lô hàng</tspan>
+  </text>
+
+  <path class="flow" d="M895 440 H1060"/>
+  <rect class="label-bg" x="902" y="404" width="155" height="24"/>
+  <text class="small" x="979" y="421" text-anchor="middle">gợi ý phương án xử lý</text>
+
+  <path class="relation-arrow" d="M895 690 H1015 V510 H1060"/>
+  <rect class="label-bg" x="900" y="645" width="190" height="42"/>
+  <text class="small" x="995" y="663" text-anchor="middle">
+    <tspan x="995">tra cứu và bổ sung</tspan>
+    <tspan x="995" dy="18">tri thức</tspan>
+  </text>
+
+  <!-- Khách hàng ngoài hệ thống -->
+  <rect class="outside" x="1410" y="375" width="160" height="130" rx="2"/>
+  <text class="box-title" x="1490" y="448" text-anchor="middle">Khách hàng</text>
+  <path class="customer-flow" d="M1320 440 H1410"/>
+  <rect class="label-bg" x="1323" y="400" width="120" height="24"/>
+  <text class="small" x="1383" y="417" text-anchor="middle">thông báo chủ động</text>
+
+  <!-- Hệ thống hiện có, tách khỏi lớp bổ sung -->
+  <rect class="outside" x="515" y="865" width="390" height="90" rx="2"/>
+  <text class="box-text" x="710" y="918" text-anchor="middle">Hệ thống nghiệp vụ hiện có: TMS, CRM</text>
+  <path class="relation" d="M710 865 V790"/>
+  <rect class="label-bg" x="728" y="810" width="118" height="25"/>
+  <text class="label" x="787" y="828" text-anchor="middle">không thay thế</text>
+</svg>

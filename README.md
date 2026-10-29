@@ -6,9 +6,11 @@ A post-sales tracking add-on for container freight forwarders that converts reac
 
 ## Screenshots
 
-![Shipment list with milestone progress](docs/screenshots/01-list.png)
+| Customer journey | System architecture |
+|---|---|
+| <img src="docs/screenshots/process-customer-journey.png" width="420" alt="Customer journey map for an FCL shipment"> | <img src="docs/screenshots/architecture-layers.svg" width="420" alt="System architecture overview"> |
 
-![Shipment detail with vessel map, ETA and proposal review](docs/screenshots/02-detail.png)
+[![View system walkthrough](https://img.shields.io/badge/%E2%96%B6_View_system_walkthrough-2563EB?style=for-the-badge)](docs/GALLERY.md)
 
 ## The Problem
 
@@ -121,6 +123,7 @@ cd frontend && npm test
 
 ## Documentation
 
+- [System Walkthrough](docs/GALLERY.md) — architecture, process analysis, and every application screen.
 - [Detailed Business Analysis](docs/business-analysis.md) — process study, time measurements, and cost baseline.
 - [Architecture Overview](docs/ARCHITECTURE.md) — 4-layer structure, component boundaries, and data flows.
 - [Technical Specification](Spec_Demo_GiamSatLoHang-v0_9_19.md) — complete functional specification (Vietnamese).
