@@ -29,7 +29,7 @@ OAuth OIDC + JWT tự phát hành + middleware bảo vệ mọi route `/api/v1/*
 - **Flags:** auth, authorization, public API/contract (mọi route `/api/v1/*` đổi hành vi từ open → protected; WS thêm close code).
 - **Hard gates:** auth + authorization — coverage test bắt buộc pass, stub TASK-03 phải biến mất.
 
-## Work phases (theo Worker Instruction PROGRESS.md TASK-14)
+## Work phases (theo Worker Instruction Spec §14)
 
 1. **`oauth.py`** — Authlib `OAuth` đăng ký Google + Microsoft (client_id/secret từ env, scope `email profile`, redirect `{APP_BASE_URL}/auth/callback/{provider}`).
 2. **`jwt.py`** (TDD) — `issue_token(user_id, role)` (HS256, `SESSION_JWT_SECRET`, exp 72h), `verify_token(token)->claims|None`.

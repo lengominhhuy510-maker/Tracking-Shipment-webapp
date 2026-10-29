@@ -29,7 +29,7 @@ Container **KHÔNG có `DATABASE_URL`**, KHÔNG chạm Postgres. Job chỉ trả
 
 ## Affected docs
 
-- PROGRESS.md TASK-10; Spec §3.7, §6.7d; IC§0.1, IC§3.3, IC§7 (`SCRAPE_*`, `REDIS_URL`), IC§12 (hostname/port).
+- Spec §10; Spec §3.7, §6.7d; IC§0.1, IC§3.3, IC§7 (`SCRAPE_*`, `REDIS_URL`), IC§12 (hostname/port).
 
 ## Non-goals
 

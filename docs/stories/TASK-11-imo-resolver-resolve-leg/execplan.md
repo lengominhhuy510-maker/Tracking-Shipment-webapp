@@ -12,7 +12,7 @@ high-risk
 
 Script Playwright deterministic tra VesselFinder + client Python poll + `resolve_leg()` là nguồn ghi định danh tàu duy nhất (mirror atomic), thay toàn bộ inline/stub TASK-03.
 
-## Scope — Output paths (đúng PROGRESS.md, CHỈ động vào đây)
+## Scope — Output paths (đúng Spec, CHỈ động vào đây)
 
 - `playwright-mcp/src/jobs/imo_resolve.ts` (MODIFY: script Playwright thật)
 - `backend/app/services/scrape_client.py`

@@ -8,7 +8,7 @@ planned
 
 high-risk
 
-## Proof matrix (theo mục Verify TASK-13 — PROGRESS.md)
+## Proof matrix (theo mục Verify TASK-13 — Spec)
 
 Trỏ tới row **TASK-13** trong `docs/TEST_MATRIX.md`.
 

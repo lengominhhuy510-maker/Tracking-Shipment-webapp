@@ -12,7 +12,7 @@ high-risk
 
 Agent LLM agentic đọc web hãng tàu qua cửa MCP lấy `eta_original` baseline, cô lập sau gateway `BrowserAgentClient`, tuyệt đối không chặn tracking khi fail.
 
-## Scope — Output paths (đúng PROGRESS.md, CHỈ động vào đây)
+## Scope — Output paths (đúng Spec, CHỈ động vào đây)
 
 - `backend/app/integrations/browser_agent_client.py`
 - `backend/app/agents/carrier_eta_agent.py`

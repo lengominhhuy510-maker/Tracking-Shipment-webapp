@@ -28,7 +28,7 @@ Python poll → Python TỰ ghi DB (Node không bao giờ ghi)
 
 MCP SSE (port 3001) chạy song song trong cùng process/container — `@playwright/mcp@0.0.78`, đọc README bản pin trước khi cấu hình (package experimental, KHÔNG bịa API).
 
-## Quyết định trích từ PROGRESS.md
+## Quyết định trích từ Spec
 
 - **BullMQ bắt buộc** (§6.7d: concurrency 2-3, Python↔Node = HTTP) — cap số browser context đồng thời; Chromium do container quản lý.
 - **Security boundary IC§0.1:** Node là sandbox scrape thuần — không credential DB, blast radius khi bị compromise chỉ là Redis queue.

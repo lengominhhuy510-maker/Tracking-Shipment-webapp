@@ -1,15 +1,8 @@
 # Architecture
 
-> **This file is required by Harness. Fill it in before running `/harness-intake`
-> on real work.** Agents read this document before changing code, so the more
-> accurate it is, the safer their changes will be.
->
-> **Nguồn chân lý:** `idea.md` (index) → `Spec_Demo_GiamSatLoHang-v0_9_19.md`
-> (quyết định) + `Interface-Contract_v0.9.9.md` (hình dạng interface). File này
-> chỉ tóm tắt để agent định hướng — mọi chi tiết chính xác (schema, endpoint,
-> signature, env) tra ở Spec/IC. **Quy tắc đọc:** active section là normative;
-> changelog / `[v0.x]` / historical wording / Known Limitations chỉ để giải
-> thích; khi mâu thuẫn, active thắng.
+> **Nguồn chân lý:** `Spec_Demo_GiamSatLoHang-v0_9_19.md` (quyết định) +
+> `Interface-Contract_v0.9.9.md` (hình dạng interface). File này chỉ tóm tắt để
+> định hướng — mọi chi tiết chính xác (schema, endpoint, signature, env) tra ở Spec/IC.
 
 ## Overview
 

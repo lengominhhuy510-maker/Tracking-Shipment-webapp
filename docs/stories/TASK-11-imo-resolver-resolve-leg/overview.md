@@ -23,7 +23,7 @@ high-risk
 
 ## Affected docs
 
-- PROGRESS.md TASK-11; Spec §6.7a, §4.6, §4.8/§4.1; IC§0.1, IC§3.3, IC§4.1, IC§9.
+- Spec §11; Spec §6.7a, §4.6, §4.8/§4.1; IC§0.1, IC§3.3, IC§4.1, IC§9.
 
 ## Non-goals
 

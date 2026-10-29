@@ -32,7 +32,7 @@ resolve_leg (1 transaction):
 sau đó: ResubscribeSignal (TASK-04) + broadcast_onboarding_update (noop/thật)
 ```
 
-## Quyết định trích từ PROGRESS.md
+## Quyết định trích từ Spec
 
 - **Nguồn ghi duy nhất:** mọi ghi định danh tàu đi qua `resolve_leg()` ngay từ TASK-11 (schema-ahead `shipment_legs` từ TASK-02) — tránh refactor khi build rollover/transit sau.
 - **Cùng 1 transaction** (`async with session.begin()`): leg và mirror shipments không bao giờ lệch nhau — data integrity gate.

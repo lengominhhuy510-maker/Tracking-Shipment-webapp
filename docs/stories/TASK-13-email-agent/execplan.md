@@ -12,7 +12,7 @@ high-risk
 
 Đọc mailbox delegate → LLM extract → tạo `agent_proposals` (human-in-the-loop) → dedup + `\Seen` đúng thứ tự giao dịch → rollover chain `resolve_and_activate_leg`. §8 bước 13.
 
-## Scope — Output paths (CHỈ động vào đây, theo PROGRESS.md TASK-13)
+## Scope — Output paths (CHỈ động vào đây, theo Spec §13)
 
 - `backend/app/integrations/imap_client.py`
 - `backend/app/agents/email_agent.py`

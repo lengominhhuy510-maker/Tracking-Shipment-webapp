@@ -8,7 +8,7 @@ planned
 
 high-risk
 
-## Proof matrix (theo mục Verify TASK-16 — PROGRESS.md, TDD)
+## Proof matrix (theo mục Verify TASK-16 — Spec, TDD)
 
 Trỏ tới row **TASK-16** trong `docs/TEST_MATRIX.md`.
 

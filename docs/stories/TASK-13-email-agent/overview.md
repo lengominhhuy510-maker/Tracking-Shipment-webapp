@@ -25,7 +25,7 @@ high-risk
 
 ## Affected docs
 
-- `PROGRESS.md` TASK-13 + Ràng buộc toàn cục + Patch p2 (cuối Summary Table)
+- Spec §13 + Ràng buộc toàn cục + Patch p2 (cuối Summary Table)
 - Spec `§7.1`, `§7.2`, `§7.4`, `§6.8d`
 - Interface-Contract `IC§0.2`, `IC§4.2`, `IC§8`, `IC§9`, `IC§14`
 

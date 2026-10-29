@@ -23,7 +23,7 @@ high-risk
 - **WS (`/ws`):** handshake đọc cookie `session_token` → verify → không hợp lệ **close 4401** (thay comment TASK-06).
 - **SessionMiddleware** thêm ở `main.py` — chỉ phục vụ cookie handshake của Authlib (tên mặc định).
 
-## Quyết định chốt (từ PROGRESS.md)
+## Quyết định chốt (từ Spec)
 
 - Version pin: `authlib==1.7.2`, `python-jose[cryptography]==3.5.0` — đã pin TASK-00, TASK-14 dùng lại, KHÔNG bump. Experimental → đọc docstring bản đã cài trước khi dùng.
 - Stub `get_current_user` TASK-03 phải **biến mất hoàn toàn** — mọi route dùng cùng 1 dependency thật.

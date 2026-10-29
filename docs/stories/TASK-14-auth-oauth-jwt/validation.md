@@ -12,7 +12,7 @@ high-risk
 
 Trỏ tới row **TASK-14** trong `docs/TEST_MATRIX.md`.
 
-Theo mục Verify PROGRESS.md TASK-14: **TDD** cho JWT + auth coverage (offline, không cần key); **smoke OAuth thật là key-gated** — cần OAuth client_id/secret + redirect URI đăng ký `localhost:1476`. Thiếu key → PASS cấu trúc + ghi smoke-key checklist, KHÔNG coi là demo end-to-end đã chạy. **Tất cả check dưới đây: not run — chưa claim pass.**
+Theo mục Verify Spec §14: **TDD** cho JWT + auth coverage (offline, không cần key); **smoke OAuth thật là key-gated** — cần OAuth client_id/secret + redirect URI đăng ký `localhost:1476`. Thiếu key → PASS cấu trúc + ghi smoke-key checklist, KHÔNG coi là demo end-to-end đã chạy. **Tất cả check dưới đây: not run — chưa claim pass.**
 
 ## Checks — TDD/offline
 
@@ -35,7 +35,7 @@ Theo mục Verify PROGRESS.md TASK-14: **TDD** cho JWT + auth coverage (offline,
 
 ## Smoke-key checklist
 
-Nếu thiếu OAuth client_id/secret lúc chạy task: đánh [x] mức cấu trúc và ghi vào Session Log PROGRESS.md:
+Nếu thiếu OAuth client_id/secret lúc chạy task: đánh [x] mức cấu trúc và ghi vào Session Log Spec:
 
 ```
 cần smoke lại: TASK-14 (OAuth Google/Microsoft client_id/secret + redirect URI localhost:1476)

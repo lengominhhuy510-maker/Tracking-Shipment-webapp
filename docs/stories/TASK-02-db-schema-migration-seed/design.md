@@ -15,7 +15,7 @@ high-risk
 - `env_conditions` (bảng 9): 1 dòng/lô, PK = `shipment_id` FK CASCADE; wind/wave/current + `weather_fetched_at`, `tide_extremes` jsonb + station metadata + `tide_fetched_at`.
 - `processed_emails` (bảng 10): PK `message_id`, `outcome` CHECK 4 giá trị, `unmatched_containers` jsonb + 3 cột trace [v0.9.10-p2]: `imap_uid bigint NULL`, `imap_folder text NULL`, `seen_set_at timestamptz NULL`.
 
-## Quyết định chốt (từ PROGRESS.md + IC)
+## Quyết định chốt (từ Spec + IC)
 
 - **Stack:** SQLAlchemy 2.x async (`asyncpg`) + Alembic; query 2.0-style tường minh (IC§2.1).
 - **Enum = text + CHECK** (IC§1.1), KHÔNG Postgres ENUM type. Giá trị ASCII không dấu (`trung_binh`, `thap`). Enum constants gom vào `enums.py` (mỗi enum 1 tuple).

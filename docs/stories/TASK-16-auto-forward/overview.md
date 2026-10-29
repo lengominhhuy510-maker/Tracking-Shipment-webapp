@@ -22,7 +22,7 @@ high-risk
 
 ## Affected docs
 
-- `PROGRESS.md` TASK-16 + Ràng buộc toàn cục (Lock reproducibility — task này MODIFY requirements)
+- Spec §16 + Ràng buộc toàn cục (Lock reproducibility — task này MODIFY requirements)
 - Spec `§7.4` (bảng auto_email/manual + rào an toàn)
 - Interface-Contract `IC§7` (`AUTO_FORWARD_RECIPIENTS`), `IC§8`
 

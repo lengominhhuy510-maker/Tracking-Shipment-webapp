@@ -10,7 +10,7 @@ high-risk
 
 ## Proof strategy
 
-Theo mục Verify PROGRESS.md TASK-02: TDD cho phần model/metadata chạy được offline; schema inspection + psql check cần Postgres thật (`docker compose -f infra/docker-compose.yml up -d db`). **Tất cả check dưới đây: not run — chưa claim pass.**
+Theo mục Verify Spec §02: TDD cho phần model/metadata chạy được offline; schema inspection + psql check cần Postgres thật (`docker compose -f infra/docker-compose.yml up -d db`). **Tất cả check dưới đây: not run — chưa claim pass.**
 
 ## Checks
 

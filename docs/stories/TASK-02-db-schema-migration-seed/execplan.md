@@ -27,7 +27,7 @@ high-risk
 - **Flags:** data model, migration, multi-domain (mọi task sau phụ thuộc schema này).
 - **Hard gates:** data model + migration — thay đổi schema phải qua review; partial unique index thiếu = fail gate.
 
-## Work phases (theo Worker Instruction PROGRESS.md TASK-02)
+## Work phases (theo Worker Instruction Spec §02)
 
 1. **`enums.py`** — mỗi enum 1 tuple đúng IC§1.1 (giá trị không dấu).
 2. **`base.py`** — `create_async_engine(settings.DATABASE_URL)`, `async_sessionmaker(expire_on_commit=False)`, `Base(DeclarativeBase)`.

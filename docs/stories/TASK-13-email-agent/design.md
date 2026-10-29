@@ -34,7 +34,7 @@ Domain service CẤM import imaplib/httpx trực tiếp — mọi I/O qua client
 
 ## Thứ tự giao dịch — commit `processed_emails` TRƯỚC STORE `\Seen` (Patch p2)
 
-Quyết định chốt trong PROGRESS.md TASK-13, phân tích 2 chiều fail:
+Quyết định chốt trong Spec §13, phân tích 2 chiều fail:
 
 - **`\Seen` trước, DB insert fail:** mail đã Seen nhưng `processed_emails` chưa có → poll UNSEEN kế KHÔNG thấy lại → **mất mail vĩnh viễn**. → CẤM thứ tự này.
 - **DB trước (chốt), `STORE \Seen` fail** (mạng rớt giữa chừng): poll kế fetch lại mail unseen → dedup `message_id` skip ngay (không xử lý lại), `seen_set_at` vẫn NULL → retry `STORE \Seen` ở cuối poll hoặc job nền. Không mất mail, không double-proposal.

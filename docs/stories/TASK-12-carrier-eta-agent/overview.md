@@ -27,7 +27,7 @@ Agent LLM agentic đọc web hãng tàu lấy ETA công bố làm `eta_original`
 - User: người phụ trách lô — có ETA baseline không cần nhập tay; fallback nhập tay giữ nguyên, không workflow nào bị bỏ.
 - Spec: §6.7/§6.7b (agentic browser, 2-3 hãng, fallback nhập tay), §6.7c (chỉ đọc, không login credential thật, chỉ ghi `eta_original`), §3.4 (LLM qua env), §8 bước 12.
 - Interface-Contract: IC§3.3 (Carrier ETA đi cửa MCP), IC§12 (SSE host/port), IC§8 (URL tracking 5 hãng).
-- Repo docs: `PROGRESS.md` TASK-12; `docs/TEST_MATRIX.md` row TASK-12.
+- Repo docs: Spec §12; `docs/TEST_MATRIX.md` row TASK-12.
 
 ## Non-goals
 

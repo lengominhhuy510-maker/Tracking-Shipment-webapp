@@ -22,7 +22,7 @@ Chưa build. Repo mới có scaffold TASK-00 (config, FastAPI health, docker-com
 ## Affected users / docs
 
 - Mọi task sau (TASK-03..17) import model từ đây — đây là task quan trọng nhất về đồng bộ: task sau thiếu cột → quay lại sửa task này, không bỏ qua leg/mirror.
-- Docs quy chiếu (nguồn chân lý): PROGRESS.md TASK-02; Spec §4, IC§0.2, IC§1.1, IC§2, IC§9, IC§13.
+- Docs quy chiếu (nguồn chân lý): Spec §02; Spec §4, IC§0.2, IC§1.1, IC§2, IC§9, IC§13.
 
 ## Non-goals
 

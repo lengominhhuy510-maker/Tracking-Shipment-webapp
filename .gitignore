@@ -18,5 +18,18 @@ frontend/dist/
 
 # Worktrees
 .worktrees/
-.claude/worktrees/
 playwright-mcp/dist/
+
+# Local tooling and scratch output
+.claude/
+.planning/
+.orchestrator/
+.build-loop/
+.superpowers/
+qa_reports/
+qa_out/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

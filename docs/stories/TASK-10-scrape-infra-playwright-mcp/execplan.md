@@ -12,7 +12,7 @@ high-risk
 
 Dựng hạ tầng scrape Node 2 cửa (REST /scrape-jobs + MCP SSE) với BullMQ + Redis, đúng ranh giới IC§0.1 (không DB), sẵn sàng cho TASK-11 (job thật) và TASK-12 (cửa MCP).
 
-## Scope — Output paths (đúng PROGRESS.md, CHỈ động vào đây)
+## Scope — Output paths (đúng Spec, CHỈ động vào đây)
 
 - `playwright-mcp/package.json` (MODIFY: deps), `playwright-mcp/package-lock.json` (PHẢI commit), `playwright-mcp/tsconfig.json`
 - `playwright-mcp/src/server.ts`, `src/queue.ts`, `src/jobs/imo_resolve.ts` (placeholder), `src/mcp.ts`

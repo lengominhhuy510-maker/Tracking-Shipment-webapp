@@ -12,7 +12,7 @@ high-risk
 
 Lô `auto_email` → auto-forward mail hợp lệ tới whitelist nội bộ từ env; lô `manual` → không. Rào an toàn: recipient KHÔNG BAO GIỜ từ nội dung mail; log mọi lần forward. §8 bước 16 [STRETCH].
 
-## Scope — Output paths (CHỈ động vào đây, theo PROGRESS.md TASK-16)
+## Scope — Output paths (CHỈ động vào đây, theo Spec §16)
 
 - `backend/app/services/forward_service.py`
 - `backend/app/services/email_service.py` (MODIFY: sau tạo proposal, lô auto_email → gọi forward)
