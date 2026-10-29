@@ -17,7 +17,7 @@ Lớp ứng dụng theo dõi sau bán hàng dành cho công ty giao nhận vận
 - Nhân viên kinh doanh theo dõi đồng thời 20 đến 30 lô hàng FCL trên bốn đến năm nguồn rời rạc, tốn 15 đến 30 phút cho mỗi lần khách hàng hỏi thông tin.
 - Khoảng 90% câu hỏi từ khách hàng gửi đến trước khi nhân viên kịp cập nhật chủ động, đặt doanh nghiệp vào thế chăm sóc sau bán bị động.
 - Doanh nghiệp tiếp nhận thông báo đổi lịch từ hãng tàu trễ từ 2 đến 4 giờ sau khi phát hành, làm mất thời gian dự phòng để điều phối xe kéo và kho bãi.
-- Giờ cập cảng thực tế lệch khỏi ETA vì những nguyên nhân quy trình hiện tại không phát hiện được: rớt tàu (rollover) hoặc đổi chuyến transit từ hãng tàu, thời tiết xấu dọc hành trình, và gió, sóng hoặc mực nước thủy triều tại cảng đích làm chậm quá trình cập bến.
+- Giờ cập cảng thực tế có thể lệch khỏi ETA vì những nguyên nhân mà ngoài hãng tàu, khách hàng khó nắm được: rớt tàu (rollover) hoặc đổi chuyến transit, thời tiết xấu dọc hành trình, hoặc gió, sóng và mực nước thủy triều tại cảng đích làm chậm quá trình cập bến.
 - Tri thức xử lý tình huống và kinh nghiệm tra cứu định danh tàu phân tán trong trí nhớ cá nhân thay vì được chuẩn hoá vào hệ thống.
 
 ## Giá Trị Đạt Được
