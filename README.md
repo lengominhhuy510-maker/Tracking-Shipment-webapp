@@ -17,7 +17,7 @@ A post-sales tracking add-on for container freight forwarders that converts reac
 - Frontline sales representatives monitor 20 to 30 concurrent FCL shipments across four to five fragmented sources, spending 15 to 30 minutes on every customer inquiry.
 - Approximately 90% of customer inquiries arrive before staff send an update, leaving forwarders in a reactive customer service posture.
 - Forwarders learn of carrier schedule changes 2 to 4 hours after publication, eliminating lead time to adjust inland haulage or warehouse labor.
-- Destination port congestion and tidal draft limits at ports like Cát Lái frequently delay berthing without triggering automated alerts.
+- Actual arrival drifts from the estimated arrival time for reasons the current process never surfaces: a carrier rollover or transit change, heavy weather along the route, and wind, sea state, or tidal water level at the destination port that slows the approach.
 - Operational knowledge about carrier tracking quirks and vessel identifiers resides with individual staff rather than system logic.
 
 ## What the System Does
